@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using ShenmueDKSharp;
 using ShenmueDKSharp.Files.Models;
 using ShenmueDKSharp.Files.Containers;
-using ShenmueDKSharp.Files;
 
 namespace model2obj
 {
@@ -39,18 +38,33 @@ namespace model2obj
             SPR spr = new SPR(sprFilepath);
             spr.Unpack(folder);
         }
+        static void ExtractIPAC(string ipacFilepath, string folder)
+        {
+            IPAC ipac = new IPAC(ipacFilepath);
+            ipac.Unpack(folder);
+        }
         static void ExtractTAC(string tadFilepath, string tacFilepath, string folder)
         {
             TAD tad = new TAD();
             tad.FileName = tadFilepath;
             tad.Unpack(tacFilepath, folder);
         }
+        static void ExtractGZ(string gzFilepath, string folder)
+        {
+            GZ gz = new GZ(gzFilepath);
+            gz.Unpack(folder);
+        }
+        static void ExtractAFS(string afsFilepath, string folder)
+        {
+            AFS afs = new AFS(afsFilepath);
+            afs.Unpack(folder);
+        }
 
         static void Main(string[] args)
         {
             if (args.Count<string>() < 3 || args[0].Contains("-h") || args[0].Contains("--help") || args[0].Contains("/?"))
             {
-                Console.WriteLine("Correct usage:\n\tmodel2obj [--mt5|--mt7] <source model> <destination obj>\n\tmodel2obj [--pkf|--pks] <source file> <output dir>\n\tmodel2obj --tac <tad file> <tac file> <output dir>");
+                Console.WriteLine("Correct usage:\n\tmodel2obj [--mt5|--mt7] <source model> <destination obj>\n\tmodel2obj [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>\n\tmodel2obj --tac <tad file> <tac file> <output dir>");
                 return;
             }
 
@@ -58,12 +72,26 @@ namespace model2obj
                 ExportMT5(args[1], args[2]);
             if ((args[0].Contains("--mt7") || args[0].Contains("-mt7")))
                 ExportMT7(args[1], args[2]);
+
             if ((args[0].Contains("--pkf") || args[0].Contains("-pkf")))
                 ExtractPKF(args[1], args[2]);
             if ((args[0].Contains("--pks") || args[0].Contains("-pks")))
                 ExtractPKS(args[1], args[2]);
+
+            if ((args[0].Contains("--spr") || args[0].Contains("-spr")))
+                ExtractSPR(args[1], args[2]);
+            if ((args[0].Contains("--ipac") || args[0].Contains("-ipac")))
+                ExtractIPAC(args[1], args[2]);
+            if ((args[0].Contains("--gz") || args[0].Contains("-gz")))
+                ExtractGZ(args[1], args[2]);
+
+            if ((args[0].Contains("--afs") || args[0].Contains("-afs")))
+                ExtractAFS(args[1], args[2]);
+
             if ((args[0].Contains("--tac") || args[0].Contains("-tac")))
                 ExtractTAC(args[1], args[2], args[3]);
+
+
         }
     }
 }
