@@ -1,0 +1,4 @@
+[submodule "ShenmueDKSharp"]
+	path = ShenmueDKSharp
+	url = https://github.com/philyeahz/ShenmueDKSharp
+	branch = master
