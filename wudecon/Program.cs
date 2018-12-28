@@ -192,7 +192,7 @@ namespace wudecon
 
         static void Main(string[] args)
         {
-            Console.WriteLine("wudecon v0.02\n");
+            Console.WriteLine("wudecon v1.00\n");
 
             if (args.Count<string>() < 3 || args[0].Contains("-h") || args[0].Contains("--help") || args[0].Contains("/?"))
             {
