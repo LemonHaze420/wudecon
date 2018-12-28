@@ -59,49 +59,134 @@ namespace model2obj
         }
         static void ExtractPKF(string pkfFilepath, string folder, bool batch = false)
         {
-            PKF pkf = new PKF(pkfFilepath);
-            pkf.Unpack(folder);
+            if (!batch)
+            {
+                PKF pkf = new PKF(pkfFilepath);
+                pkf.Unpack(folder);
+            }
+            else
+            {
+                var ext = new List<string> { ".pkf", ".PKF" };
+                var myFiles = Directory.GetFiles(pkfFilepath, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                foreach (string file in myFiles)
+                {
+                    PKF pkf = new PKF(file);
+                    pkf.Unpack(folder);
+                }
+            }
         }
         static void ExtractPKS(string pksFilepath, string folder, bool batch = false)
         {
-            PKS pks = new PKS(pksFilepath);
-            pks.Unpack(folder);
+            if (!batch)
+            {
+                PKS pks = new PKS(pksFilepath);
+                pks.Unpack(folder);
+            }
+            else
+            {
+                var ext = new List<string> { ".pks", ".PKS" };
+                var myFiles = Directory.GetFiles(pksFilepath, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                foreach (string file in myFiles)
+                {
+                    PKS pks = new PKS(file);
+                    pks.Unpack(folder);
+                }
+            }
         }
         static void ExtractSPR(string sprFilepath, string folder, bool batch = false)
         {
-            SPR spr = new SPR(sprFilepath);
-            spr.Unpack(folder);
+            if (!batch)
+            {
+                SPR spr = new SPR(sprFilepath);
+                spr.Unpack(folder);
+            }
+            else
+            {
+                var ext = new List<string> { ".spr", ".SPR" };
+                var myFiles = Directory.GetFiles(sprFilepath, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                foreach (string file in myFiles)
+                {
+                    SPR spr = new SPR(file);
+                    spr.Unpack(folder);
+                }
+            }
         }
         static void ExtractIPAC(string ipacFilepath, string folder, bool batch = false)
         {
-            IPAC ipac = new IPAC(ipacFilepath);
-            ipac.Unpack(folder);
+            if (!batch)
+            {
+                IPAC ipac = new IPAC(ipacFilepath);
+                ipac.Unpack(folder);
+            }
+            else
+            {
+                var ext = new List<string> { ".ipac", ".IPAC" };
+                var myFiles = Directory.GetFiles(ipacFilepath, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                foreach (string file in myFiles)
+                {
+                    IPAC ipac = new IPAC(file);
+                    ipac.Unpack(folder);
+                }
+            }
         }
-        static void ExtractTAC(string tadFilepath, string tacFilepath, string folder, bool batch = false)
+        static void ExtractGZ(string gzFilepath, string folder, bool batch = false)
+        {
+            if (!batch)
+            {
+                GZ gz = new GZ(gzFilepath);
+                gz.Unpack(folder);
+            }
+            else
+            {
+                var ext = new List<string> { ".gz", ".GZ" };
+                var myFiles = Directory.GetFiles(gzFilepath, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                foreach (string file in myFiles)
+                {
+                    GZ gz = new GZ(file);
+                    gz.Unpack(folder);
+                }
+            }
+        }
+        static void ExtractAFS(string afsFilepath, string folder, bool batch = false)
+        {
+            if (!batch)
+            {
+                AFS afs = new AFS(afsFilepath);
+                afs.Unpack(folder);
+            }
+            else
+            {
+                var ext = new List<string> { ".afs", ".AFS" };
+                var myFiles = Directory.GetFiles(afsFilepath, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                foreach (string file in myFiles)
+                {
+                    AFS afs = new AFS(file);
+                    afs.Unpack(folder);
+                }
+            }
+        }
+        static void ExtractTAC(string tadFilepath, string tacFilepath, string folder)
         {
             TAD tad = new TAD();
             tad.FileName = tadFilepath;
             tad.Unpack(tacFilepath, folder);
-        }
-        static void ExtractGZ(string gzFilepath, string folder, bool batch = false)
-        {
-            GZ gz = new GZ(gzFilepath);
-            gz.Unpack(folder);
-        }
-        static void ExtractAFS(string afsFilepath, string folder, bool batch = false)
-        {
-            AFS afs = new AFS(afsFilepath);
-            afs.Unpack(folder);
         }
 
         static void Main(string[] args)
         {
             if (args.Count<string>() < 3 || args[0].Contains("-h") || args[0].Contains("--help") || args[0].Contains("/?"))
             {
-                Console.WriteLine("Correct usage:\n\tmodel2obj [--mt5|--mt7] <source model> <destination obj>\n\tmodel2obj [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>\n\tmodel2obj --tac <tad file> <tac file> <output dir>");
+                Console.WriteLine("Example usage:\n\tmodel2obj [--mt5|--mt7] <source model> <destination obj>\n\tmodel2obj [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>\n\tmodel2obj --tac <tad file> <tac file> <output dir>");
                 return;
             }
 
+            // Model Conversions
             if ((args[0].Contains("--mt5") || args[0].Contains("-mt5")))
             {
                 ExportMT5(args[1], args[2]);
@@ -120,36 +205,68 @@ namespace model2obj
                 ExportMT7(args[1], args[2], true);
             }
 
+            // Container conversions
             if ((args[0].Contains("--pkf") || args[0].Contains("-pkf")))
             {
                 ExtractPKF(args[1], args[2]);
+            }
+            else if ((args[0].Contains("--batch-pkf") || args[0].Contains("-bpkf")))
+            {
+                ExtractPKF(args[1], args[2], true);
             }
             if ((args[0].Contains("--pks") || args[0].Contains("-pks")))
             {
                 ExtractPKS(args[1], args[2]);
             }
+            else if ((args[0].Contains("--batch-pks") || args[0].Contains("-bpks")))
+            {
+                ExtractPKS(args[1], args[2], true);
+            }
+
             if ((args[0].Contains("--spr") || args[0].Contains("-spr")))
             {
                 ExtractSPR(args[1], args[2]);
             }
+            else if ((args[0].Contains("--batch-spr") || args[0].Contains("-bspr")))
+            {
+                ExtractSPR(args[1], args[2], true);
+            }
+
+
             if ((args[0].Contains("--ipac") || args[0].Contains("-ipac")))
             {
                 ExtractIPAC(args[1], args[2]);
             }
+            else if ((args[0].Contains("--batch-ipac") || args[0].Contains("-ipac")))
+            {
+                ExtractIPAC(args[1], args[2], true);
+            }
+
             if ((args[0].Contains("--gz") || args[0].Contains("-gz")))
             {
                 ExtractGZ(args[1], args[2]);
             }
+            else if ((args[0].Contains("--batch-gz") || args[0].Contains("-bgz")))
+            {
+                ExtractGZ(args[1], args[2], true);
+            }
+
             if ((args[0].Contains("--afs") || args[0].Contains("-afs")))
             {
                 ExtractAFS(args[1], args[2]);
             }
+            else if ((args[0].Contains("--batch-afs") || args[0].Contains("-bafs")))
+            {
+                ExtractAFS(args[1], args[2], true);
+
+            }
+
             if ((args[0].Contains("--tac") || args[0].Contains("-tac")))
             {
                 ExtractTAC(args[1], args[2], args[3]);
             }
 
-
+            Console.WriteLine("Finished.");
         }
     }
 }
