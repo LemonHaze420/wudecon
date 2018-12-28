@@ -178,11 +178,25 @@ namespace model2obj
             tad.Unpack(tacFilepath, folder);
         }
 
+        static void PrintUsage()
+        {
+            Console.WriteLine("\tmodel2obj <mode> <input> <output>");
+            Console.WriteLine("\tmodel2obj --mt5 <mt5 file> <obj file>");
+            Console.WriteLine("\tmodel2obj --mt7 <mt7 file> <obj file>");
+            Console.WriteLine("\tmodel2obj [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>");
+            Console.WriteLine("\tmodel2obj --tac <tad file> <tac file> <output dir>");
+            Console.WriteLine("\tmodel2obj --batch-mt5 <mt5 dir> <obj output dir>");
+
+            Console.WriteLine("\nBatch flags:\n\t--batch-mt5\n\t--batch-mt7\n\t--batch-pkf\n\t--batch-pks\n\t--batch-spr\n\t--batch-ipac\n\t--batch-gz\n\t--batch-afs");
+        }
+
         static void Main(string[] args)
         {
+            Console.WriteLine("model2obj v0.02\n");
+
             if (args.Count<string>() < 3 || args[0].Contains("-h") || args[0].Contains("--help") || args[0].Contains("/?"))
             {
-                Console.WriteLine("Example usage:\n\tmodel2obj [--mt5|--mt7] <source model> <destination obj>\n\tmodel2obj [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>\n\tmodel2obj --tac <tad file> <tac file> <output dir>");
+                PrintUsage();
                 return;
             }
 
