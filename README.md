@@ -1,5 +1,5 @@
 # wudecon
-A multi-purpose tool built with ShenmueDKSharp to convert/unpack a variety of file formats used in Shenmue I and Shenmue II.
+A multi-purpose tool built with [ShenmueDKSharp](https://github.com/philyeahz/ShenmueDKSharp) to convert/unpack a variety of file formats used in Shenmue I and Shenmue II.
 
 ```
 wudecon v1.00
