@@ -50,7 +50,7 @@ namespace model2obj
         {
             if (args.Count<string>() < 3 || args[0].Contains("-h") || args[0].Contains("--help") || args[0].Contains("/?"))
             {
-                Console.WriteLine("Correct usage:\n\tmodel2obj [--mt5|--mt7|--pkf|--pks|--tac] <source> <destination>");
+                Console.WriteLine("Correct usage:\n\tmodel2obj [--mt5|--mt7] <source model> <destination obj>\n\tmodel2obj [--pkf|--pks] <source file> <output dir>\n\tmodel2obj --tac <tad file> <tac file> <output dir>");
                 return;
             }
 
