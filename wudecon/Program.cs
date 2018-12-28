@@ -9,7 +9,7 @@ using ShenmueDKSharp;
 using ShenmueDKSharp.Files.Models;
 using ShenmueDKSharp.Files.Containers;
 
-namespace model2obj
+namespace wudecon
 {
     class Program
     {
@@ -180,19 +180,19 @@ namespace model2obj
 
         static void PrintUsage()
         {
-            Console.WriteLine("\tmodel2obj <mode> <input> <output>");
-            Console.WriteLine("\tmodel2obj --mt5 <mt5 file> <obj file>");
-            Console.WriteLine("\tmodel2obj --mt7 <mt7 file> <obj file>");
-            Console.WriteLine("\tmodel2obj [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>");
-            Console.WriteLine("\tmodel2obj --tac <tad file> <tac file> <output dir>");
-            Console.WriteLine("\tmodel2obj --batch-mt5 <mt5 dir> <obj output dir>");
+            Console.WriteLine("\twudecon <mode> <input> <output>");
+            Console.WriteLine("\twudecon --mt5 <mt5 file> <obj file>");
+            Console.WriteLine("\twudecon --mt7 <mt7 file> <obj file>");
+            Console.WriteLine("\twudecon [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>");
+            Console.WriteLine("\twudecon --tac <tad file> <tac file> <output dir>");
+            Console.WriteLine("\twudecon --batch-mt5 <mt5 dir> <obj output dir>");
 
             Console.WriteLine("\nBatch flags:\n\t--batch-mt5\n\t--batch-mt7\n\t--batch-pkf\n\t--batch-pks\n\t--batch-spr\n\t--batch-ipac\n\t--batch-gz\n\t--batch-afs");
         }
 
         static void Main(string[] args)
         {
-            Console.WriteLine("model2obj v0.02\n");
+            Console.WriteLine("wudecon v0.02\n");
 
             if (args.Count<string>() < 3 || args[0].Contains("-h") || args[0].Contains("--help") || args[0].Contains("/?"))
             {

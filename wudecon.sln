@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2000
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "model2obj", "model2obj\model2obj.csproj", "{F2A79431-B634-47F7-B3BC-6BB440A98A8A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wudecon", "wudecon\wudecon.csproj", "{F2A79431-B634-47F7-B3BC-6BB440A98A8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShenmueDKSharp", "ShenmueDKSharp\ShenmueDKSharp.csproj", "{68CA6FDA-E029-4247-9229-C3A75DFA9F8D}"
 EndProject
