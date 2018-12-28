@@ -2,7 +2,7 @@
 A multi-purpose tool built with ShenmueDKSharp to convert/unpack a variety of file formats used in Shenmue I and Shenmue II.
 
 ```
-wudecon v0.02
+wudecon v1.00
 
         wudecon <mode> <input> <output>
         wudecon --mt5 <mt5 file> <obj file>
