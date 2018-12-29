@@ -518,10 +518,17 @@ namespace wudecon
         }
         static void ExtractTAC(string tadFilepath, string tacFilepath, string folder)
         {
-            TAD tad = new TAD(tadFilepath);
-            TAC tac = new TAC(tad);
+            try
+            {
+                TAD tad = new TAD(tadFilepath);
+                TAC tac = new TAC(tad);
 
-            tac.Unpack(true, false, folder);
+                tac.Unpack(true, false, folder);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFilepath, e.ToString());
+            }
         }
 
         static void PrintUsage()
@@ -636,7 +643,17 @@ namespace wudecon
                         {
                             if (Path.GetFileNameWithoutExtension(tacFile).Equals(Path.GetFileNameWithoutExtension(tadFile)))
                             {
-                                ExtractTAC(tadFile, tacFile, destFolder);
+                                try
+                                {
+                                    ExtractTAC(tadFile, tacFile, destFolder);
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFile, e.ToString());
+
+                                    ++iNumFailedOperations;
+                                }
+                                ++iNumOperations;
                             }
                         }
                     }
