@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
-
 using ShenmueDKSharp;
 using ShenmueDKSharp.Files.Models;
 using ShenmueDKSharp.Files.Containers;
@@ -643,7 +642,7 @@ namespace wudecon
 
                 timeStart.Stop();
 
-                Console.WriteLine("Operations completed in {0}", timeStart.ElapsedMilliseconds);
+                Console.WriteLine("Operations completed in {0}m", timeStart.ElapsedMilliseconds/60000);
             }
 
             if(iNumOperations > 0 || iNumFailedOperations > 0)
