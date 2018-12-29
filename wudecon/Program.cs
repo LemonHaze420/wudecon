@@ -31,8 +31,12 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        string dest = objFilepath + "\\" + Path.GetFileName(file) + ".OBJ";
+                        var currentChildDir = objFilepath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        if (!Directory.Exists(currentChildDir))
+                            Directory.CreateDirectory(currentChildDir);
 
+                        string dest = currentChildDir + "\\" + Path.GetFileName(file) + ".OBJ";
+                                                
                         try
                         {    
                             if(bVerbose)
@@ -90,8 +94,12 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        string dest = objFilepath + "\\" + Path.GetFileName(file) + ".OBJ";
-                        
+                        var currentChildDir = objFilepath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        if (!Directory.Exists(currentChildDir))
+                            Directory.CreateDirectory(currentChildDir);
+
+                        string dest = currentChildDir + "\\" + Path.GetFileName(file) + ".OBJ";
+
                         try
                         {
                             if (bVerbose)
@@ -148,14 +156,20 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
+                        var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        if (!Directory.Exists(currentChildDir))
+                            Directory.CreateDirectory(currentChildDir);
+
+                        string dest = currentChildDir + "\\";
+
                         try
                         {
                             PKF pkf = new PKF(file);
 
                             if (bVerbose)
-                                Console.WriteLine("Unpacking {0} to {1}", file, folder);
+                                Console.WriteLine("Unpacking {0} to {1}", file, dest);
 
-                            pkf.Unpack(folder);
+                            pkf.Unpack(dest);
                         }
                         catch (Exception e)
                         {
@@ -204,14 +218,20 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
+                        var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        if (!Directory.Exists(currentChildDir))
+                            Directory.CreateDirectory(currentChildDir);
+
+                        string dest = currentChildDir + "\\";
+
                         try
                         {
                             PKS pks = new PKS(file);
 
                             if (bVerbose)
-                                Console.WriteLine("Unpacking {0} to {1}", file, folder);
+                                Console.WriteLine("Unpacking {0} to {1}", file, dest);
 
-                            pks.Unpack(folder);
+                            pks.Unpack(dest);
                         }
                         catch (Exception e)
                         {
@@ -259,12 +279,27 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        SPR spr = new SPR(file);
+                        var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        if (!Directory.Exists(currentChildDir))
+                            Directory.CreateDirectory(currentChildDir);
 
-                        if (bVerbose)
-                            Console.WriteLine("Unpacking {0} to {1}", file, folder);
+                        string dest = currentChildDir + "\\";
 
-                        spr.Unpack(folder);
+                        try
+                        {
+                            SPR spr = new SPR(file);
+
+                            if (bVerbose)
+                                Console.WriteLine("Unpacking {0} to {1}", file, dest);
+
+                            spr.Unpack(dest);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
                         ++iNumOperations;
                     }
                 }
@@ -306,12 +341,27 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        IPAC ipac = new IPAC(file);
+                        var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        if (!Directory.Exists(currentChildDir))
+                            Directory.CreateDirectory(currentChildDir);
 
-                        if (bVerbose)
-                            Console.WriteLine("Converting {0} to {1}", file, folder);
+                        string dest = currentChildDir + "\\";
 
-                        ipac.Unpack(folder);
+                        try
+                        {
+                            IPAC ipac = new IPAC(file);
+
+                            if (bVerbose)
+                                Console.WriteLine("Converting {0} to {1}", file, dest);
+
+                            ipac.Unpack(dest);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
                         ++iNumOperations;
                     }
                 }
@@ -352,12 +402,27 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        GZ gz = new GZ(file);
+                        var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        if (!Directory.Exists(currentChildDir))
+                            Directory.CreateDirectory(currentChildDir);
 
-                        if (bVerbose)
-                            Console.WriteLine("Converting {0} to {1}", file, folder);
+                        string dest = currentChildDir + "\\";
 
-                        gz.Unpack(folder);
+                        try
+                        {
+                            GZ gz = new GZ(file);
+
+                            if (bVerbose)
+                                Console.WriteLine("Converting {0} to {1}", file, dest);
+
+                            gz.Unpack(dest);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
                         ++iNumOperations;
 
                     }
@@ -400,13 +465,27 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        AFS afs = new AFS(file);
+                        var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        if (!Directory.Exists(currentChildDir))
+                            Directory.CreateDirectory(currentChildDir);
 
-                        if (bVerbose)
-                            Console.WriteLine("Converting {0} to {1}", file, folder);
+                        string dest = currentChildDir + "\\";
 
-                        afs.Unpack(folder);
+                        try
+                        {
+                            AFS afs = new AFS(file);
 
+                            if (bVerbose)
+                                Console.WriteLine("Converting {0} to {1}", file, dest);
+
+                            afs.Unpack(dest);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
                         ++iNumOperations;
                     }
                 }
@@ -516,7 +595,45 @@ namespace wudecon
                 ExtractTAC(args[1], args[2], args[3]);
             }
 
-            Console.WriteLine("Finished {0} operations. ({1} failed)", iNumOperations, iNumFailedOperations);
+
+            if((args[0].Contains("--all") || args[0].Contains("-a")))
+            {
+                Console.WriteLine("Processing all formats (except TAC):");
+
+                Console.WriteLine("Processing PKF..");
+                ExtractAFS(args[1], args[2]);
+                Console.WriteLine("Finished processing PKF!");
+
+                Console.WriteLine("Processing PKS..");
+                ExtractPKS(args[1], args[2]);
+                Console.WriteLine("Finished processing PKS!");
+
+                Console.WriteLine("Processing SPR..");
+                ExtractSPR(args[1], args[2]);
+                Console.WriteLine("Finished processing SPR!");
+
+                Console.WriteLine("Processing IPAC..");
+                ExtractIPAC(args[1], args[2]);
+                Console.WriteLine("Finished processing IPAC!");
+
+                Console.WriteLine("Processing GZ..");
+                ExtractGZ(args[1], args[2]);
+                Console.WriteLine("Finished processing GZ!");
+
+                Console.WriteLine("Processing AFS..");
+                ExtractAFS(args[1], args[2]);
+                Console.WriteLine("Finished processing AFS!");
+
+                Console.WriteLine("Processing MT5..");
+                ExportMT5(args[1], args[2]);
+                Console.WriteLine("Finished Processing MT5!");
+
+                Console.WriteLine("Processing MT7..");
+                ExportMT7(args[1], args[2]);
+                Console.WriteLine("Finished processing MT7!");
+            }
+
+            Console.WriteLine("Finished {1}/{0} operations.", iNumOperations, iNumFailedOperations);
         }
     }
 }
