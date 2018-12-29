@@ -553,6 +553,11 @@ namespace wudecon
                 return;
             }
 
+            // Enable TAD/TAC batch conversion
+            if ((args[0].Contains("t")))
+                bTADExtract = true;
+
+            // Enable verbose logging
             if ((args[0].Contains("v")))
                 bVerbose = true;
 
