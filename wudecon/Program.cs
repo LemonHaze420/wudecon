@@ -14,6 +14,10 @@ namespace wudecon
 {
     class Program
     {
+        static bool bVerbose = false;
+        static int iNumFailedOperations = 0;
+        static int iNumOperations = 0;
+
         static void ExportMT7(string path, string objFilepath)
         {
             if (!File.Exists(path))
@@ -27,10 +31,24 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        string dest = file;
-                        dest += ".OBJ";
+                        try
+                        {
+                            string dest = file;
+                            dest += ".OBJ";
+                            
+                            if(bVerbose)
+                                Console.WriteLine("Converting {0} to {1}", file, dest);
 
-                        ExportMT7(file, dest);
+                            ExportMT7(file, dest);
+                        }
+                        catch(Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", file, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
+
+                        ++iNumOperations;
                     }
                 }
                 else
@@ -41,10 +59,21 @@ namespace wudecon
             }
             else
             {
-                MT7 mt7 = new MT7(path);
-                OBJ obj = new OBJ(mt7);
+                try
+                {
+                    MT7 mt7 = new MT7(path);
+                    OBJ obj = new OBJ(mt7);
 
-                obj.Write(objFilepath);
+                    obj.Write(objFilepath);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                    ++iNumFailedOperations;
+                }
+
+                ++iNumOperations;
             }
 
             return;
@@ -62,10 +91,24 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        string dest = file;
-                        dest += ".OBJ";
+                        try
+                        {
+                            string dest = file;
+                            dest += ".OBJ";
 
-                        ExportMT5(file, dest);
+                            if (bVerbose)
+                                Console.WriteLine("Converting {0} to {1}", file, dest);
+
+                            ExportMT5(file, dest);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", file, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
+
+                        ++iNumOperations;
                     }
                 }
                 else
@@ -76,10 +119,21 @@ namespace wudecon
             }
             else
             {
-                MT5 mt5 = new MT5(path);
-                OBJ obj = new OBJ(mt5);
+                try
+                {
+                    MT5 mt5 = new MT5(path);
+                    OBJ obj = new OBJ(mt5);
 
-                obj.Write(objFilepath);
+                    obj.Write(objFilepath);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                    ++iNumFailedOperations;
+                }
+
+                ++iNumOperations;
             }
             return;
         }
@@ -96,8 +150,23 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
-                        PKF pkf = new PKF(file);
-                        pkf.Unpack(folder);
+                        try
+                        {
+                            PKF pkf = new PKF(file);
+
+                            if (bVerbose)
+                                Console.WriteLine("Unpacking {0} to {1}", file, folder);
+
+                            pkf.Unpack(folder);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", file, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
+
+                        ++iNumOperations;
                     }
                 }
                 else
@@ -108,39 +177,76 @@ namespace wudecon
             }
             else
             {
-                PKF pkf = new PKF(path);
-                pkf.Unpack(folder);
-            }
-        }
-        static void ExtractPKS(string pksFilepath, string folder)
-        {
-            if (!File.Exists(pksFilepath))
-            {
-                Console.WriteLine("{0} does not exist as a file, falling back to batch mode.", pksFilepath);
+                try
+                {
+                    PKF pkf = new PKF(path);
+                    pkf.Unpack(folder);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
 
-                if(Directory.Exists(pksFilepath))
+                    ++iNumFailedOperations;
+                }
+
+                ++iNumOperations;
+            }
+            return;
+        }
+        static void ExtractPKS(string path, string folder)
+        {
+            if (!File.Exists(path))
+            {
+                Console.WriteLine("{0} does not exist as a file, falling back to batch mode.", path);
+
+                if(Directory.Exists(path))
                 {
                     var ext = new List<string> { ".pks", ".PKS" };
-                    var myFiles = Directory.GetFiles(pksFilepath, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+                    var myFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
 
                     foreach (string file in myFiles)
                     {
-                        PKS pks = new PKS(file);
-                        pks.Unpack(folder);
+                        try
+                        {
+                            PKS pks = new PKS(file);
+
+                            if (bVerbose)
+                                Console.WriteLine("Unpacking {0} to {1}", file, folder);
+
+                            pks.Unpack(folder);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", file, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
+
+                        ++iNumOperations;
                     }
                 }
                 else
                 {
-                    Console.WriteLine("{0} does not exist. Cancelling operation.", pksFilepath);
+                    Console.WriteLine("{0} does not exist. Cancelling operation.", path);
                     return;
                 }
             }
             else
             {
-                PKS pks = new PKS(pksFilepath);
-                pks.Unpack(folder);
-                return;
+                try
+                {
+                    PKS pks = new PKS(path);
+                    pks.Unpack(folder);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                    ++iNumFailedOperations;
+                }
+                ++iNumOperations;
             }
+            return;
         }
         static void ExtractSPR(string path, string folder)
         {
@@ -157,7 +263,11 @@ namespace wudecon
                     {
                         SPR spr = new SPR(file);
 
+                        if (bVerbose)
+                            Console.WriteLine("Unpacking {0} to {1}", file, folder);
+
                         spr.Unpack(folder);
+                        ++iNumOperations;
                     }
                 }
                 else
@@ -168,9 +278,19 @@ namespace wudecon
             }
             else
             {
-                SPR spr = new SPR(path);
+                try
+                {
+                    SPR spr = new SPR(path);
 
-                spr.Unpack(folder);    
+                    spr.Unpack(folder);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                    ++iNumFailedOperations;
+                }
+                ++iNumOperations;
             }
 
             return;
@@ -189,7 +309,12 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         IPAC ipac = new IPAC(file);
+
+                        if (bVerbose)
+                            Console.WriteLine("Converting {0} to {1}", file, folder);
+
                         ipac.Unpack(folder);
+                        ++iNumOperations;
                     }
                 }
                 else
@@ -200,8 +325,19 @@ namespace wudecon
             }
             else
             {
-                IPAC ipac = new IPAC(path);
-                ipac.Unpack(folder);
+                try
+                {
+                    IPAC ipac = new IPAC(path);
+                    ipac.Unpack(folder);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                    ++iNumFailedOperations;
+                }
+                ++iNumOperations;
+
             }
             return;
         }
@@ -220,7 +356,12 @@ namespace wudecon
                     {
                         GZ gz = new GZ(file);
 
+                        if (bVerbose)
+                            Console.WriteLine("Converting {0} to {1}", file, folder);
+
                         gz.Unpack(folder);
+                        ++iNumOperations;
+
                     }
                 }
                 else
@@ -231,9 +372,20 @@ namespace wudecon
             }
             else
             {
-                GZ gz = new GZ(path);
+                try
+                {
+                    GZ gz = new GZ(path);
 
-                gz.Unpack(folder);
+                    gz.Unpack(folder);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                    ++iNumFailedOperations;
+                }
+                ++iNumOperations;
+
             }
             return;
         }
@@ -252,7 +404,12 @@ namespace wudecon
                     {
                         AFS afs = new AFS(file);
 
+                        if (bVerbose)
+                            Console.WriteLine("Converting {0} to {1}", file, folder);
+
                         afs.Unpack(folder);
+
+                        ++iNumOperations;
                     }
                 }
                 else
@@ -263,9 +420,20 @@ namespace wudecon
             }
             else
             {
-                AFS afs = new AFS(path);
+                try
+                {
+                    AFS afs = new AFS(path);
 
-                afs.Unpack(folder);
+                    afs.Unpack(folder);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+
+                    ++iNumFailedOperations;
+                }
+                ++iNumOperations;
+
             }
 
             return;
@@ -300,6 +468,9 @@ namespace wudecon
                 PrintUsage();
                 return;
             }
+
+            if((args[0].Contains("v")))
+                bVerbose = true;
 
             // Model Conversions
             if ((args[0].Contains("--mt5") || args[0].Contains("-mt5")))
@@ -347,7 +518,7 @@ namespace wudecon
                 ExtractTAC(args[1], args[2], args[3]);
             }
 
-            Console.WriteLine("Finished.");
+            Console.WriteLine("Finished {0} operations. ({1} failed)", iNumOperations, iNumFailedOperations);
         }
     }
 }
