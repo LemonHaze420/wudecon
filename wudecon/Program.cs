@@ -31,11 +31,10 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
+                        string dest = objFilepath + "\\" + Path.GetFileName(file) + ".OBJ";
+
                         try
-                        {
-                            string dest = file;
-                            dest += ".OBJ";
-                            
+                        {    
                             if(bVerbose)
                                 Console.WriteLine("Converting {0} to {1}", file, dest);
 
@@ -91,11 +90,10 @@ namespace wudecon
 
                     foreach (string file in myFiles)
                     {
+                        string dest = objFilepath + "\\" + Path.GetFileName(file) + ".OBJ";
+                        
                         try
                         {
-                            string dest = file;
-                            dest += ".OBJ";
-
                             if (bVerbose)
                                 Console.WriteLine("Converting {0} to {1}", file, dest);
 
