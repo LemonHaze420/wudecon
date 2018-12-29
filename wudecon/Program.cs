@@ -642,7 +642,7 @@ namespace wudecon
 
                 timeStart.Stop();
 
-                Console.WriteLine("Operations completed in {0}m", timeStart.ElapsedMilliseconds/60000);
+                Console.WriteLine("Operations completed in {0} minutes ({1}ms)", timeStart.ElapsedMilliseconds/60000, timeStart.ElapsedMilliseconds);
             }
 
             if(iNumOperations > 0 || iNumFailedOperations > 0)
