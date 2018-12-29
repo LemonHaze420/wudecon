@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using ShenmueDKSharp;
 using ShenmueDKSharp.Files.Models;
 using ShenmueDKSharp.Files.Containers;
+using ShenmueDKSharp.Utils;
 
 namespace wudecon
 {
@@ -173,9 +174,9 @@ namespace wudecon
         }
         static void ExtractTAC(string tadFilepath, string tacFilepath, string folder)
         {
-            TAD tad = new TAD();
-            tad.FileName = tadFilepath;
-            tad.Unpack(tacFilepath, folder);
+            TAD tad = new TAD(tadFilepath);
+            TAC tac = new TAC(tad);
+            tac.Unpack(true, false, folder);
         }
 
         static void PrintUsage()
