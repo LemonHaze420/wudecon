@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Reflection;
+
 using ShenmueDKSharp;
 using ShenmueDKSharp.Files.Models;
 using ShenmueDKSharp.Files.Containers;
@@ -239,7 +241,6 @@ namespace wudecon
 
                             ++iNumFailedOperations;
                         }
-
                         ++iNumOperations;
                     }
                 }
@@ -539,15 +540,20 @@ namespace wudecon
 
         static void Main(string[] args)
         {
-            Console.WriteLine("wudecon v1.00\n");
+            Console.WriteLine("{0} v{1}\n", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
-            if (args.Count<string>() < 3 || args[0].Contains("-h") || args[0].Contains("--help") || args[0].Contains("/?"))
+            if (args.Count<string>() < 3 || 
+                args[0].Contains("-h") || 
+                args[0].Contains("--help") || 
+                args[0].Contains("/?") ||
+                args[0].Contains("-v") ||
+                args[0].Contains("--version"))
             {
                 PrintUsage();
                 return;
             }
 
-            if((args[0].Contains("v")))
+            if ((args[0].Contains("v")))
                 bVerbose = true;
 
             // Model Conversions
@@ -634,7 +640,8 @@ namespace wudecon
                 Console.WriteLine("Finished processing MT7!");
             }
 
-            Console.WriteLine("Failed {1}/{0} operations.", iNumOperations, iNumFailedOperations);
+            if(iNumOperations > 0 || iNumFailedOperations > 0)
+                Console.WriteLine("Failed {1}/{0} operations.", iNumOperations, iNumFailedOperations);
         }
     }
 }
