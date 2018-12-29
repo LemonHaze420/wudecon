@@ -534,8 +534,8 @@ namespace wudecon
             Console.WriteLine("\twudecon [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>");
             Console.WriteLine("\twudecon --tac <tad file> <tac file> <output dir>");
 
-            Console.WriteLine("Batch conversion possible by replacing file argument for path");
-
+            Console.WriteLine("\n\tBatch conversion possible by replacing file argument for path");
+            Console.WriteLine("\tFor verbose logging, add 'v' to the beginning or end of the mode, e.g. '--allv' or 'v--mt5'");
         }
 
         static void Main(string[] args)
@@ -605,6 +605,8 @@ namespace wudecon
 
             if((args[0].Contains("--all") || args[0].Contains("-a")))
             {
+                var timeStart = System.Diagnostics.Stopwatch.StartNew();
+                
                 Console.WriteLine("Processing all formats (except TAC):");
 
                 Console.WriteLine("Processing PKF..");
@@ -638,6 +640,10 @@ namespace wudecon
                 Console.WriteLine("Processing MT7..");
                 ExportMT7(args[1], args[2]);
                 Console.WriteLine("Finished processing MT7!");
+
+                timeStart.Stop();
+
+                Console.WriteLine("Operations completed in {0}", timeStart.ElapsedMilliseconds);
             }
 
             if(iNumOperations > 0 || iNumFailedOperations > 0)
