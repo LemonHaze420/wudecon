@@ -6,18 +6,9 @@ wudecon v1.00
 
         wudecon <mode> <input> <output>
         wudecon --mt5 <mt5 file> <obj file>
+        wudecon --mt5 <dir with mt5's> <output dir>
         wudecon --mt7 <mt7 file> <obj file>
         wudecon [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>
         wudecon --tac <tad file> <tac file> <output dir>
-        wudecon --batch-mt5 <mt5 dir> <obj output dir>
-
-Batch flags:
-        --batch-mt5
-        --batch-mt7
-        --batch-pkf
-        --batch-pks
-        --batch-spr
-        --batch-ipac
-        --batch-gz
-        --batch-afs
+Batch conversion possible by replacing file argument for path
 ```

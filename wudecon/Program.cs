@@ -287,6 +287,8 @@ namespace wudecon
             Console.WriteLine("\twudecon [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>");
             Console.WriteLine("\twudecon --tac <tad file> <tac file> <output dir>");
 
+            Console.WriteLine("Batch conversion possible by replacing file argument for path");
+
         }
 
         static void Main(string[] args)
