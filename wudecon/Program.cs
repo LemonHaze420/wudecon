@@ -15,9 +15,10 @@ namespace wudecon
 {
     class Program
     {
-        static bool bVerbose = false;
+        static bool bTADExtract         = false;
+        static bool bVerbose            = false;
         static int iNumFailedOperations = 0;
-        static int iNumOperations = 0;
+        static int iNumOperations       = 0;
 
         static void ExportMT7(string path, string objFilepath)
         {
@@ -601,43 +602,81 @@ namespace wudecon
                 ExtractTAC(args[1], args[2], args[3]);
             }
 
+            string src = args[1];
+            string destFolder = args[2];
 
-            if((args[0].Contains("--all") || args[0].Contains("-a")))
+            if ((args[0].Contains("--all") || args[0].Contains("-a")))
             {
                 var timeStart = System.Diagnostics.Stopwatch.StartNew();
-                
-                Console.WriteLine("Processing all formats (except TAC):");
 
+                if (!bTADExtract)
+                    Console.WriteLine("Processing all formats (except TAC):");
+                else
+                {
+                    destFolder = args[2] + "TAC";
+
+                    Console.WriteLine("Processing all formats:");
+
+                    Console.WriteLine("Processing TAC..");
+
+                    var ext = new List<string> { ".tac", ".TAC" };
+                    var tacFiles = Directory.GetFiles(src, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                    ext = new List<string> { ".tad", ".TAD" };
+                    var tadFiles = Directory.GetFiles(src, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                    foreach (string tacFile in tacFiles)
+                    {
+                        foreach (string tadFile in tadFiles)
+                        {
+                            if (Path.GetFileNameWithoutExtension(tacFile).Equals(Path.GetFileNameWithoutExtension(tadFile)))
+                            {
+                                ExtractTAC(tadFile, tacFile, destFolder);
+                            }
+                        }
+                    }
+
+                    Console.WriteLine("Finished processing TAC!");
+                }
+
+                destFolder = args[2] + "PKF";
                 Console.WriteLine("Processing PKF..");
-                ExtractAFS(args[1], args[2]);
+                ExtractAFS(src, destFolder);
                 Console.WriteLine("Finished processing PKF!");
 
+                destFolder = args[2] + "PKS";
                 Console.WriteLine("Processing PKS..");
-                ExtractPKS(args[1], args[2]);
+                ExtractPKS(src, destFolder);
                 Console.WriteLine("Finished processing PKS!");
 
+                destFolder = args[2] + "SPR";
                 Console.WriteLine("Processing SPR..");
-                ExtractSPR(args[1], args[2]);
+                ExtractSPR(src, destFolder);
                 Console.WriteLine("Finished processing SPR!");
 
+                destFolder = args[2] + "IPAC";
                 Console.WriteLine("Processing IPAC..");
-                ExtractIPAC(args[1], args[2]);
+                ExtractIPAC(src, destFolder);
                 Console.WriteLine("Finished processing IPAC!");
 
+                destFolder = args[2] + "GZ";
                 Console.WriteLine("Processing GZ..");
-                ExtractGZ(args[1], args[2]);
+                ExtractGZ(src, destFolder);
                 Console.WriteLine("Finished processing GZ!");
 
+                destFolder = args[2] + "AFS";
                 Console.WriteLine("Processing AFS..");
-                ExtractAFS(args[1], args[2]);
+                ExtractAFS(src, destFolder);
                 Console.WriteLine("Finished processing AFS!");
 
+                destFolder = args[2] + "MT5";
                 Console.WriteLine("Processing MT5..");
-                ExportMT5(args[1], args[2]);
+                ExportMT5(src, destFolder);
                 Console.WriteLine("Finished Processing MT5!");
 
+                destFolder = args[2] + "MT7";
                 Console.WriteLine("Processing MT7..");
-                ExportMT7(args[1], args[2]);
+                ExportMT7(src, destFolder);
                 Console.WriteLine("Finished processing MT7!");
 
                 timeStart.Stop();
