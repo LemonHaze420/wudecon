@@ -526,6 +526,7 @@ namespace wudecon
         static void PrintUsage()
         {
             Console.WriteLine("\twudecon <mode> <input> <output>");
+            Console.WriteLine("\twudecon --all <input dir> <output dir>");
             Console.WriteLine("\twudecon --mt5 <mt5 file> <obj file>");
             Console.WriteLine("\twudecon --mt5 <dir with mt5's> <output dir>");
             Console.WriteLine("\twudecon --mt7 <mt7 file> <obj file>");
@@ -633,7 +634,7 @@ namespace wudecon
                 Console.WriteLine("Finished processing MT7!");
             }
 
-            Console.WriteLine("Finished {1}/{0} operations.", iNumOperations, iNumFailedOperations);
+            Console.WriteLine("Failed {1}/{0} operations.", iNumOperations, iNumFailedOperations);
         }
     }
 }
