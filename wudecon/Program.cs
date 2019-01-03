@@ -691,7 +691,7 @@ namespace wudecon
                 ExtractSPR(src, destFolder);
                 Console.WriteLine("Finished processing SPR!");
 
-                /*destFolder = args[2] + "\\IPAC";
+                destFolder = args[2] + "\\IPAC";
                 Console.WriteLine("Processing IPAC..");
                 ExtractIPAC(src, destFolder);
                 Console.WriteLine("Finished processing IPAC!");
@@ -709,7 +709,7 @@ namespace wudecon
                 destFolder = args[2] + "\\MT5";
                 Console.WriteLine("Processing MT5..");
                 ExportMT5(src, destFolder);
-                Console.WriteLine("Finished Processing MT5!");*/
+                Console.WriteLine("Finished Processing MT5!");
 
                 destFolder = args[2] + "\\MT7";
                 Console.WriteLine("Processing MT7..");
@@ -719,50 +719,6 @@ namespace wudecon
                 timeStart.Stop();
 
                 Console.WriteLine("Operations completed in {0} minutes ({1}ms)", timeStart.ElapsedMilliseconds/60000, timeStart.ElapsedMilliseconds);
-            }
-            else if((args[0].Contains("--process")))
-            {
-                var texDir  = args[1];
-                src         = args[2];
-                destFolder  = args[2];
-
-                Console.WriteLine("Initializing TextureDatabase..");
-                TextureDatabase.SearchDirectory(texDir);
-
-                Console.WriteLine("Converting models..");
-                ExportMT7(src, destFolder);
-
-                Console.WriteLine("Finished!");
-                
-                /*Console.WriteLine("Processing all TAD's");
-                var ext = new List<string> { ".tac", ".TAC" };
-                var tacFiles = Directory.GetFiles(src, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
-
-                ext = new List<string> { ".tad", ".TAD" };
-                var tadFiles = Directory.GetFiles(src, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
-
-                foreach (string tacFile in tacFiles)
-                {
-                    foreach (string tadFile in tadFiles)
-                    {
-                        if (Path.GetFileNameWithoutExtension(tacFile).Equals(Path.GetFileNameWithoutExtension(tadFile)))
-                        {
-                            try
-                            {
-                                ExtractTAC(tadFile, tacFile, destFolder);
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFile, e.ToString());
-
-                                ++iNumFailedOperations;
-                            }
-                            ++iNumOperations;
-                        }
-                    }
-                }
-                Console.WriteLine("Finished processing");*/
-
             }
 
             if (iNumOperations > 0 || iNumFailedOperations > 0)
