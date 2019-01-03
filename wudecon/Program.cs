@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using ShenmueDKSharp;
+using ShenmueDKSharp.Files;
 using ShenmueDKSharp.Files.Models;
 using ShenmueDKSharp.Files.Containers;
 using ShenmueDKSharp.Utils;
@@ -43,7 +44,7 @@ namespace wudecon
                         {    
                             if(bVerbose)
                                 Console.WriteLine("Converting {0} to {1}", file, dest);
-
+                            
                             ExportMT7(file, dest);
                         }
                         catch(Exception e)
@@ -64,12 +65,18 @@ namespace wudecon
             }
             else
             {
+                var destFile = Path.GetFileName(objFilepath);
+                objFilepath += "_\\";
+
+                Directory.CreateDirectory(objFilepath); 
+                objFilepath += destFile;
+                
                 try
                 {
                     MT7 mt7 = new MT7(path);
                     OBJ obj = new OBJ(mt7);
 
-                    obj.Write(objFilepath);
+                    obj.Write(objFilepath);                    
                 }
                 catch (Exception e)
                 {
@@ -127,6 +134,12 @@ namespace wudecon
             }
             else
             {
+                var destFile = Path.GetFileName(objFilepath);
+                objFilepath += "_\\";
+
+                Directory.CreateDirectory(objFilepath);
+                objFilepath += destFile;
+
                 try
                 {
                     MT5 mt5 = new MT5(path);
@@ -163,11 +176,13 @@ namespace wudecon
                             Directory.CreateDirectory(currentChildDir);
 
                         string dest = currentChildDir + "\\";
-
                         try
                         {
                             PKF pkf = new PKF(file);
 
+                            dest+= "\\_" + Path.GetFileName(file) + "_\\";
+                            Directory.CreateDirectory(dest);
+                            
                             if (bVerbose)
                                 Console.WriteLine("Unpacking {0} to {1}", file, dest);
 
@@ -523,7 +538,7 @@ namespace wudecon
                 TAD tad = new TAD(tadFilepath);
                 TAC tac = new TAC(tad);
 
-                tac.Unpack(true, false, folder);
+                tac.Unpack(bVerbose, false, folder);
             }
             catch (Exception e)
             {
@@ -625,7 +640,7 @@ namespace wudecon
                     Console.WriteLine("Processing all formats (except TAC):");
                 else
                 {
-                    destFolder = args[2] + "TAC";
+                    destFolder = args[2] + "\\TAC";
 
                     Console.WriteLine("Processing all formats:");
 
@@ -661,42 +676,42 @@ namespace wudecon
                     Console.WriteLine("Finished processing TAC!");
                 }
 
-                destFolder = args[2] + "PKF";
+                destFolder = args[2] + "\\PKF";
                 Console.WriteLine("Processing PKF..");
-                ExtractAFS(src, destFolder);
+                ExtractPKF(src, destFolder);
                 Console.WriteLine("Finished processing PKF!");
 
-                destFolder = args[2] + "PKS";
+                destFolder = args[2] + "\\PKS";
                 Console.WriteLine("Processing PKS..");
                 ExtractPKS(src, destFolder);
                 Console.WriteLine("Finished processing PKS!");
 
-                destFolder = args[2] + "SPR";
+                destFolder = args[2] + "\\SPR";
                 Console.WriteLine("Processing SPR..");
                 ExtractSPR(src, destFolder);
                 Console.WriteLine("Finished processing SPR!");
 
-                destFolder = args[2] + "IPAC";
+                /*destFolder = args[2] + "\\IPAC";
                 Console.WriteLine("Processing IPAC..");
                 ExtractIPAC(src, destFolder);
                 Console.WriteLine("Finished processing IPAC!");
 
-                destFolder = args[2] + "GZ";
+                destFolder = args[2] + "\\GZ";
                 Console.WriteLine("Processing GZ..");
                 ExtractGZ(src, destFolder);
                 Console.WriteLine("Finished processing GZ!");
 
-                destFolder = args[2] + "AFS";
+                destFolder = args[2] + "\\AFS";
                 Console.WriteLine("Processing AFS..");
                 ExtractAFS(src, destFolder);
                 Console.WriteLine("Finished processing AFS!");
 
-                destFolder = args[2] + "MT5";
+                destFolder = args[2] + "\\MT5";
                 Console.WriteLine("Processing MT5..");
                 ExportMT5(src, destFolder);
-                Console.WriteLine("Finished Processing MT5!");
+                Console.WriteLine("Finished Processing MT5!");*/
 
-                destFolder = args[2] + "MT7";
+                destFolder = args[2] + "\\MT7";
                 Console.WriteLine("Processing MT7..");
                 ExportMT7(src, destFolder);
                 Console.WriteLine("Finished processing MT7!");
@@ -705,8 +720,52 @@ namespace wudecon
 
                 Console.WriteLine("Operations completed in {0} minutes ({1}ms)", timeStart.ElapsedMilliseconds/60000, timeStart.ElapsedMilliseconds);
             }
+            else if((args[0].Contains("--process")))
+            {
+                var texDir  = args[1];
+                src         = args[2];
+                destFolder  = args[2];
 
-            if(iNumOperations > 0 || iNumFailedOperations > 0)
+                Console.WriteLine("Initializing TextureDatabase..");
+                TextureDatabase.SearchDirectory(texDir);
+
+                Console.WriteLine("Converting models..");
+                ExportMT7(src, destFolder);
+
+                Console.WriteLine("Finished!");
+                
+                /*Console.WriteLine("Processing all TAD's");
+                var ext = new List<string> { ".tac", ".TAC" };
+                var tacFiles = Directory.GetFiles(src, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                ext = new List<string> { ".tad", ".TAD" };
+                var tadFiles = Directory.GetFiles(src, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+
+                foreach (string tacFile in tacFiles)
+                {
+                    foreach (string tadFile in tadFiles)
+                    {
+                        if (Path.GetFileNameWithoutExtension(tacFile).Equals(Path.GetFileNameWithoutExtension(tadFile)))
+                        {
+                            try
+                            {
+                                ExtractTAC(tadFile, tacFile, destFolder);
+                            }
+                            catch (Exception e)
+                            {
+                                Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFile, e.ToString());
+
+                                ++iNumFailedOperations;
+                            }
+                            ++iNumOperations;
+                        }
+                    }
+                }
+                Console.WriteLine("Finished processing");*/
+
+            }
+
+            if (iNumOperations > 0 || iNumFailedOperations > 0)
                 Console.WriteLine("Failed {1}/{0} operations.", iNumOperations, iNumFailedOperations);
         }
     }
