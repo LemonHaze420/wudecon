@@ -35,11 +35,12 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = objFilepath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
-                        if (!Directory.Exists(currentChildDir))
-                            Directory.CreateDirectory(currentChildDir);
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\" + Path.ChangeExtension(filename, ".obj");
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
-                        string dest = currentChildDir + "\\" + Path.GetFileName(file) + ".OBJ";
-                                                
                         try
                         {    
                             if(bVerbose)
@@ -104,10 +105,11 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = objFilepath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
-                        if (!Directory.Exists(currentChildDir))
-                            Directory.CreateDirectory(currentChildDir);
-
-                        string dest = currentChildDir + "\\" + Path.GetFileName(file) + ".OBJ";
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\" + Path.ChangeExtension(filename, ".obj");
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
                         try
                         {
@@ -172,17 +174,16 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
-                        if (!Directory.Exists(currentChildDir))
-                            Directory.CreateDirectory(currentChildDir);
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
-                        string dest = currentChildDir + "\\";
                         try
                         {
                             PKF pkf = new PKF(file);
 
-                            dest+= "\\_" + Path.GetFileName(file) + "_\\";
-                            Directory.CreateDirectory(dest);
-                            
                             if (bVerbose)
                                 Console.WriteLine("Unpacking {0} to {1}", file, dest);
 
@@ -236,10 +237,11 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
-                        if (!Directory.Exists(currentChildDir))
-                            Directory.CreateDirectory(currentChildDir);
-
-                        string dest = currentChildDir + "\\";
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
                         try
                         {
@@ -296,10 +298,11 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
-                        if (!Directory.Exists(currentChildDir))
-                            Directory.CreateDirectory(currentChildDir);
-
-                        string dest = currentChildDir + "\\";
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
                         try
                         {
@@ -358,10 +361,11 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
-                        if (!Directory.Exists(currentChildDir))
-                            Directory.CreateDirectory(currentChildDir);
-
-                        string dest = currentChildDir + "\\";
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
                         try
                         {
@@ -419,10 +423,11 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
-                        if (!Directory.Exists(currentChildDir))
-                            Directory.CreateDirectory(currentChildDir);
-
-                        string dest = currentChildDir + "\\";
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
                         try
                         {
@@ -482,10 +487,11 @@ namespace wudecon
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
-                        if (!Directory.Exists(currentChildDir))
-                            Directory.CreateDirectory(currentChildDir);
-
-                        string dest = currentChildDir + "\\";
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
 
                         try
                         {
