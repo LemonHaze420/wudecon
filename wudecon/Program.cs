@@ -794,8 +794,7 @@ namespace wudecon
                 Console.WriteLine("Operations completed in {0} minutes ({1}ms)", timeStart.ElapsedMilliseconds/60000, timeStart.ElapsedMilliseconds);
             }
 
-            if (iNumOperations > 0 || iNumFailedOperations > 0)
-                Console.WriteLine("Completed {0}/{1} operations.", iNumOperations, (iNumOperations + iNumFailedOperations));
+            Console.WriteLine("Completed {0}/{1} operations.", iNumOperations, (iNumOperations + iNumFailedOperations));
         }
     }
 }
