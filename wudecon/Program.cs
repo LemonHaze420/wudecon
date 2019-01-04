@@ -558,6 +558,7 @@ namespace wudecon
                 Console.WriteLine("{0}", tadFilepath);
                 if(!File.Exists(tadFilepath))                {
                     Console.WriteLine("ERROR: TAD file could not be found.");
+                    ++iNumFailedOperations;
                     return;
                 }
             }
@@ -585,15 +586,18 @@ namespace wudecon
                     tac.Close();
 
                     Console.WriteLine("Finished writing {0} from {1} ({2})", Path.GetFileName(destination), Path.GetFileName(file), Path.GetFileName(tacFilepath));
+                    ++iNumOperations;
                 }
                 catch(Exception e)
                 {
                     Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFilepath, e.ToString());
+                    ++iNumFailedOperations;
                 }
             }
             else
             {
                 Console.WriteLine("ERROR: Could not find {0} in TAC {1}", file, Path.GetFileName(tacFilepath));
+                ++iNumFailedOperations;
             }
             return;
         }
