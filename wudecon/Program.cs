@@ -566,11 +566,13 @@ namespace wudecon
             // Ensure the destination directory exists, if not, create it..
             if (!Directory.Exists(Path.GetDirectoryName(destination)))            {
                 Directory.CreateDirectory(Path.GetFullPath(destination));
-                Console.WriteLine("Creating directory \'{0}\'", Path.GetDirectoryName(destination));
+                if (bVerbose)
+                    Console.WriteLine("Creating directory \'{0}\'", Path.GetDirectoryName(destination));
             }
 
             // Read in the data and write it out..
-            Console.WriteLine("Reading {0}..", tadFilepath);
+            if(bVerbose)
+                Console.WriteLine("Reading {0}..", tadFilepath);
 
             TAD tad = new TAD(tadFilepath);
             TAC tac = new TAC(tad, tacFilepath);
@@ -580,6 +582,12 @@ namespace wudecon
             {
                 try
                 {
+                    destination += "\\";
+
+                    if (String.IsNullOrEmpty(Path.GetFileName(destination)))                    
+                        destination += Path.GetFileName(file);
+                    
+
                     FileStream fs = File.Open(destination, FileMode.OpenOrCreate, FileAccess.Write);
                     fs.Write(bytes, 0, bytes.Length);
                     fs.Close();
@@ -601,8 +609,7 @@ namespace wudecon
             }
             return;
         }
-
-
+        
         static void PrintUsage()
         {
             Console.WriteLine("\twudecon <mode> <input> <output>");
@@ -724,6 +731,9 @@ namespace wudecon
                                 try
                                 {
                                     ExtractTAC(tadFile, tacFile, destFolder);
+
+                                    if (bVerbose)
+                                        Console.WriteLine("Finished extracting {0} from {1} to {2}", tadFile.ToString(), tacFile.ToString(), destFolder);
                                 }
                                 catch (Exception e)
                                 {
@@ -785,7 +795,7 @@ namespace wudecon
             }
 
             if (iNumOperations > 0 || iNumFailedOperations > 0)
-                Console.WriteLine("Failed {1}/{0} operations.", iNumOperations, iNumFailedOperations);
+                Console.WriteLine("Completed {0}/{1} operations.", iNumOperations, (iNumOperations + iNumFailedOperations));
         }
     }
 }
