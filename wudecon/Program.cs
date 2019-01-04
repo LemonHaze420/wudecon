@@ -77,7 +77,11 @@ namespace wudecon
                     MT7 mt7 = new MT7(path);
                     OBJ obj = new OBJ(mt7);
 
-                    obj.Write(objFilepath);                    
+                    if(obj != null && mt7 != null)
+                        obj.Write(objFilepath);                    
+
+                    if(bVerbose)
+                        Console.WriteLine("Converting {0} to {1}", path, objFilepath);
                 }
                 catch (Exception e)
                 {
@@ -113,10 +117,11 @@ namespace wudecon
 
                         try
                         {
+                            ExportMT5(file, dest);
+
                             if (bVerbose)
                                 Console.WriteLine("Converting {0} to {1}", file, dest);
 
-                            ExportMT5(file, dest);
                         }
                         catch (Exception e)
                         {
@@ -147,7 +152,12 @@ namespace wudecon
                     MT5 mt5 = new MT5(path);
                     OBJ obj = new OBJ(mt5);
 
-                    obj.Write(objFilepath);
+                    if(obj != null && mt5 != null)
+                        obj.Write(objFilepath);
+
+                    if(bVerbose)
+                        Console.WriteLine("Converted {0} to {1}", path, objFilepath);
+
                 }
                 catch (Exception e)
                 {
@@ -184,10 +194,12 @@ namespace wudecon
                         {
                             PKF pkf = new PKF(file);
 
+                            if(pkf != null)
+                                pkf.Unpack(dest);
+
                             if (bVerbose)
                                 Console.WriteLine("Unpacking {0} to {1}", file, dest);
 
-                            pkf.Unpack(dest);
                         }
                         catch (Exception e)
                         {
@@ -210,7 +222,12 @@ namespace wudecon
                 try
                 {
                     PKF pkf = new PKF(path);
-                    pkf.Unpack(folder);
+
+                    if(pkf != null)
+                        pkf.Unpack(folder);
+
+                    if(bVerbose)
+                        Console.WriteLine("Unpacking {0} to {1}", path, folder);
                 }
                 catch (Exception e)
                 {
@@ -247,10 +264,11 @@ namespace wudecon
                         {
                             PKS pks = new PKS(file);
 
+                            if(pks != null)
+                                pks.Unpack(dest);
+
                             if (bVerbose)
                                 Console.WriteLine("Unpacking {0} to {1}", file, dest);
-
-                            pks.Unpack(dest);
                         }
                         catch (Exception e)
                         {
@@ -272,7 +290,13 @@ namespace wudecon
                 try
                 {
                     PKS pks = new PKS(path);
-                    pks.Unpack(folder);
+
+                    if(pks != null)
+                        pks.Unpack(folder);
+
+                    if(bVerbose)
+                        Console.WriteLine("Unpacked {0} to {1}", path, folder);
+
                 }
                 catch (Exception e)
                 {
@@ -308,10 +332,12 @@ namespace wudecon
                         {
                             SPR spr = new SPR(file);
 
-                            if (bVerbose)
-                                Console.WriteLine("Unpacking {0} to {1}", file, dest);
+                            if (spr != null)
+                                spr.Unpack(dest);
 
-                            spr.Unpack(dest);
+                            if (bVerbose)
+                                Console.WriteLine("Unpacked {0} to {1}", file, dest);
+
                         }
                         catch (Exception e)
                         {
@@ -334,7 +360,11 @@ namespace wudecon
                 {
                     SPR spr = new SPR(path);
 
-                    spr.Unpack(folder);
+                    if(spr != null)
+                        spr.Unpack(folder);
+
+                    if(bVerbose)
+                        Console.WriteLine("Converted {0} to {1}", path, folder);
                 }
                 catch (Exception e)
                 {
@@ -371,10 +401,11 @@ namespace wudecon
                         {
                             IPAC ipac = new IPAC(file);
 
-                            if (bVerbose)
-                                Console.WriteLine("Converting {0} to {1}", file, dest);
+                            if(ipac != null)
+                                ipac.Unpack(dest);
 
-                            ipac.Unpack(dest);
+                            if (bVerbose)
+                                Console.WriteLine("Converted {0} to {1}", file, dest);
                         }
                         catch (Exception e)
                         {
@@ -396,7 +427,12 @@ namespace wudecon
                 try
                 {
                     IPAC ipac = new IPAC(path);
-                    ipac.Unpack(folder);
+
+                    if(ipac != null)
+                        ipac.Unpack(folder);
+
+                    if(bVerbose)
+                        Console.WriteLine("Converted {0} to {1}", path, folder);
                 }
                 catch (Exception e)
                 {
@@ -433,10 +469,11 @@ namespace wudecon
                         {
                             GZ gz = new GZ(file);
 
-                            if (bVerbose)
-                                Console.WriteLine("Converting {0} to {1}", file, dest);
+                            if (gz != null)
+                                gz.Unpack(dest);
 
-                            gz.Unpack(dest);
+                            if (bVerbose)
+                                Console.WriteLine("Converted {0} to {1}", file, dest);
                         }
                         catch (Exception e)
                         {
@@ -460,7 +497,11 @@ namespace wudecon
                 {
                     GZ gz = new GZ(path);
 
-                    gz.Unpack(folder);
+                    if(gz != null)
+                        gz.Unpack(folder);
+
+                    if (bVerbose)
+                        Console.WriteLine("Converted {0} to {1}", path, folder);
                 }
                 catch (Exception e)
                 {
@@ -497,10 +538,11 @@ namespace wudecon
                         {
                             AFS afs = new AFS(file);
 
-                            if (bVerbose)
-                                Console.WriteLine("Converting {0} to {1}", file, dest);
+                            if (afs != null)
+                                afs.Unpack(dest);
 
-                            afs.Unpack(dest);
+                            if (bVerbose)
+                                Console.WriteLine("Converted {0} to {1}", file, dest);
                         }
                         catch (Exception e)
                         {
@@ -522,8 +564,12 @@ namespace wudecon
                 try
                 {
                     AFS afs = new AFS(path);
+                    
+                    if(afs != null)
+                        afs.Unpack(folder);
 
-                    afs.Unpack(folder);
+                    if (bVerbose)
+                        Console.WriteLine("Converted {0} to {1}", path, folder);
                 }
                 catch (Exception e)
                 {
@@ -548,6 +594,42 @@ namespace wudecon
             catch (Exception e)
             {
                 Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFilepath, e.ToString());
+            }
+        }
+
+        static void ReplaceFileInTAC(string file, string tacFilepath, string destination, string tadFilepath = "")
+        {
+            // If tadFilepath is empty, search for it..
+            if (String.IsNullOrEmpty(tadFilepath))
+            {
+                tadFilepath = Path.ChangeExtension(tacFilepath, ".tad");
+                Console.WriteLine("{0}", tadFilepath);
+                if (!File.Exists(tadFilepath))
+                {
+                    Console.WriteLine("ERROR: TAD file could not be found.");
+                    ++iNumFailedOperations;
+                    return;
+                }
+            }
+
+            // Ensure the destination directory exists, if not, create it..
+            if (!Directory.Exists(Path.GetDirectoryName(destination)))
+            {
+                Directory.CreateDirectory(Path.GetFullPath(destination));
+                if (bVerbose)
+                    Console.WriteLine("Creating directory \'{0}\'", Path.GetDirectoryName(destination));
+            }
+
+            // Read in the data and write it out..
+            if (bVerbose)
+                Console.WriteLine("Reading {0}..", tadFilepath);
+
+            TAD tad = new TAD(tadFilepath);
+            TAC tac = new TAC(tad, tacFilepath);
+
+            if(tac != null)
+            {
+                tac.Unpack(bVerbose, false);
             }
         }
         static void ExtractFileFromTAC(string file, string tacFilepath, string destination, string tadFilepath = "")
@@ -578,7 +660,7 @@ namespace wudecon
             TAC tac = new TAC(tad, tacFilepath);
             
             byte[] bytes = tac.GetFileBuffer(file);
-            if (bytes != null) 
+            if (tac != null && bytes != null) 
             {
                 try
                 {
