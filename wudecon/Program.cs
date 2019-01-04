@@ -534,7 +534,6 @@ namespace wudecon
                 ++iNumOperations;
 
             }
-
             return;
         }
         static void ExtractTAC(string tadFilepath, string tacFilepath, string folder)
@@ -551,6 +550,43 @@ namespace wudecon
                 Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFilepath, e.ToString());
             }
         }
+        static void ExtractFileFromTAC(string file, string tacFilepath, string destination, string tadFilepath = "")
+        {
+            // If tadFilepath is empty, search for it..
+            if(String.IsNullOrEmpty(tadFilepath))            {
+                tadFilepath = Path.GetFullPath(tacFilepath) + Path.GetFileNameWithoutExtension(tacFilepath) + ".tad";
+                if(!File.Exists(tadFilepath))                {
+                    tadFilepath = Path.GetFullPath(tacFilepath) + Path.GetFileNameWithoutExtension(tacFilepath) + ".TAD";
+                    if (!File.Exists(tadFilepath))
+                    {
+                        Console.WriteLine("ERROR: TAD file could not be found.");
+                        return;
+                    }
+                }
+            }
+
+            // Ensure the destination directory exists, if not, create it..
+            if(Directory.Exists(destination))            {
+                Directory.CreateDirectory(Path.GetFullPath(destination));
+                Console.WriteLine("Creating directory \'{0}\'", Path.GetDirectoryName(destination));
+            }
+
+            // Read in the data and write it out..
+            Console.WriteLine("Reading {0}..", tadFilepath);
+
+            TAD tad = new TAD(tadFilepath);
+            TAC tac = new TAC(tad, tacFilepath);
+
+            byte[] bytes = tac.GetFileBuffer(file);
+            FileStream fs = File.Open(destination, FileMode.OpenOrCreate);
+            foreach(byte b in bytes)
+                fs.WriteByte(b);
+            fs.Close();
+            tac.Close();
+
+            Console.WriteLine("Finished writing {0} from {1} ({2})", destination, file, Path.GetFileName(tacFilepath));
+        }
+
 
         static void PrintUsage()
         {
