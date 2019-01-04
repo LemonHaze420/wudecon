@@ -580,8 +580,7 @@ namespace wudecon
                 try
                 {
                     FileStream fs = File.Open(destination, FileMode.OpenOrCreate, FileAccess.Write);
-                    foreach (byte b in bytes)
-                        fs.WriteByte(b);
+                    fs.Write(bytes, 0, bytes.Length);
                     fs.Close();
                     tac.Close();
 
