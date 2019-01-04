@@ -21,6 +21,11 @@ namespace wudecon
         static int iNumFailedOperations = 0;
         static int iNumOperations       = 0;
 
+        /// <summary>
+        /// Exports a given MT7 file into an OBJ file at the requested directory
+        /// </summary>
+        /// <param name="path">Path to MT7</param>
+        /// <param name="objFilepath">Path to output the resulting OBJ file</param>
         static void ExportMT7(string path, string objFilepath)
         {
             if (!File.Exists(path))
@@ -95,6 +100,12 @@ namespace wudecon
 
             return;
         }
+
+        /// <summary>
+        /// Exports a given MT5 file into an OBJ file at the requested directory
+        /// </summary>
+        /// <param name="path">Path to MT5</param>
+        /// <param name="objFilepath">Path to output the resulting OBJ file</param>
         static void ExportMT5(string path, string objFilepath)
         {
             if (!File.Exists(path))
@@ -170,6 +181,12 @@ namespace wudecon
             }
             return;
         }
+
+        /// <summary>
+        /// Extracts a given PKF file into the output directory provided
+        /// </summary>
+        /// <param name="path">Path to PKF</param>
+        /// <param name="folder">Path to output the extracted PKF</param>
         static void ExtractPKF(string path, string folder)
         {
             if (!File.Exists(path))
@@ -240,6 +257,12 @@ namespace wudecon
             }
             return;
         }
+
+        /// <summary>
+        /// Extracts a given PKS file into the output directory provided
+        /// </summary>
+        /// <param name="path">Path to PKS</param>
+        /// <param name="folder">Path to output the extracted PKS</param>
         static void ExtractPKS(string path, string folder)
         {
             if (!File.Exists(path))
@@ -308,6 +331,12 @@ namespace wudecon
             }
             return;
         }
+
+        /// <summary>
+        /// Extracts a given SPR file into the output directory provided
+        /// </summary>
+        /// <param name="path">Path to SPR</param>
+        /// <param name="folder">Path to output the extracted SPR</param>
         static void ExtractSPR(string path, string folder)
         {
             if (!File.Exists(path))
@@ -377,6 +406,12 @@ namespace wudecon
 
             return;
         }
+
+        /// <summary>
+        /// Extracts a given IPAC file into the output directory provided
+        /// </summary>
+        /// <param name="path">Path to IPAC</param>
+        /// <param name="folder">Path to output the extracted IPAC</param>
         static void ExtractIPAC(string path, string folder)
         {
             if (!File.Exists(path))
@@ -445,6 +480,11 @@ namespace wudecon
             }
             return;
         }
+        /// <summary>
+        /// Extracts a given GZ file into the output directory provided
+        /// </summary>
+        /// <param name="path">Path to GZ</param>
+        /// <param name="folder">Path to output the extracted GZ</param>
         static void ExtractGZ(string path, string folder)
         {
             if (!File.Exists(path))
@@ -514,6 +554,12 @@ namespace wudecon
             }
             return;
         }
+
+        /// <summary>
+        /// Extracts a given AFS file into the output directory provided
+        /// </summary>
+        /// <param name="path">Path to AFS</param>
+        /// <param name="folder">Path to output the extracted AFS</param>
         static void ExtractAFS(string path, string folder)
         {
             if (!File.Exists(path))
@@ -582,6 +628,13 @@ namespace wudecon
             }
             return;
         }
+
+        /// <summary>
+        /// Extracts a given TAC file into the output directory provided
+        /// </summary>
+        /// <param name="tadFilepath">Path to TAC</param>
+        /// <param name="tacFilepath">Path to corresponding TAD file</param>
+        /// <param name="folder">Path to output the extracted TAC</param>
         static void ExtractTAC(string tadFilepath, string tacFilepath, string folder)
         {
             try
@@ -597,6 +650,13 @@ namespace wudecon
             }
         }
 
+        /// <summary>
+        /// Replaces a file in a given TAC file.
+        /// </summary>
+        /// <param name="file">Path to replace inside TAC file</param>
+        /// <param name="tacFilepath">Path to TAC file</param>
+        /// <param name="destination">Path to file in the given TAC file to replace</param>
+        /// <param name="tadFilepath">(Optional) Path to corresponding TAD file. Will auto-detect if empty.</param>
         static void ReplaceFileInTAC(string file, string tacFilepath, string destination, string tadFilepath = "")
         {
             // If tadFilepath is empty, search for it..
@@ -632,6 +692,14 @@ namespace wudecon
                 tac.Unpack(bVerbose, false);
             }
         }
+
+        /// <summary>
+        /// Extracts a file from a given TAC file.
+        /// </summary>
+        /// <param name="file">Path to file to extract from TAC file.</param>
+        /// <param name="tacFilepath">Path to TAC file to extract the file from.</param>
+        /// <param name="destination">Path to output the extracted file from the TAC file.</param>
+        /// <param name="tadFilepath">(Optional) Path to corresponding TAD file. Will auto-detect if empty.</param>
         static void ExtractFileFromTAC(string file, string tacFilepath, string destination, string tadFilepath = "")
         {
             // If tadFilepath is empty, search for it..
@@ -704,6 +772,7 @@ namespace wudecon
             Console.WriteLine("\twudecon --tacfile <file in tac to extract> <output dir>");
 
             Console.WriteLine("\n\tBatch conversion possible by replacing file argument for path");
+            Console.WriteLine("\tWhen using --tacfile (or -tfile) the path to search for within the TAC needs to be in lowercase.");
             Console.WriteLine("\tFor verbose logging, add 'v' to the beginning or end of the mode, e.g. '--allv' or 'v--mt5'");
         }
 
