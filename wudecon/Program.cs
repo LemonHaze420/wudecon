@@ -566,7 +566,7 @@ namespace wudecon
             }
 
             // Ensure the destination directory exists, if not, create it..
-            if(Directory.Exists(destination))            {
+            if(!Directory.Exists(destination))            {
                 Directory.CreateDirectory(Path.GetFullPath(destination));
                 Console.WriteLine("Creating directory \'{0}\'", Path.GetDirectoryName(destination));
             }
@@ -584,7 +584,7 @@ namespace wudecon
             fs.Close();
             tac.Close();
 
-            Console.WriteLine("Finished writing {0} from {1} ({2})", destination, file, Path.GetFileName(tacFilepath));
+            Console.WriteLine("Finished writing {0} from {1} ({2})", Path.GetFileName(destination), Path.GetFileName(file), Path.GetFileName(tacFilepath));
         }
 
 
