@@ -554,19 +554,16 @@ namespace wudecon
         {
             // If tadFilepath is empty, search for it..
             if(String.IsNullOrEmpty(tadFilepath))            {
-                tadFilepath = Path.GetFullPath(tacFilepath) + Path.GetFileNameWithoutExtension(tacFilepath) + ".tad";
+                tadFilepath = Path.ChangeExtension(tacFilepath, ".tad");
+                Console.WriteLine("{0}", tadFilepath);
                 if(!File.Exists(tadFilepath))                {
-                    tadFilepath = Path.GetFullPath(tacFilepath) + Path.GetFileNameWithoutExtension(tacFilepath) + ".TAD";
-                    if (!File.Exists(tadFilepath))
-                    {
-                        Console.WriteLine("ERROR: TAD file could not be found.");
-                        return;
-                    }
+                    Console.WriteLine("ERROR: TAD file could not be found.");
+                    return;
                 }
             }
 
             // Ensure the destination directory exists, if not, create it..
-            if(!Directory.Exists(destination))            {
+            if (!Directory.Exists(Path.GetDirectoryName(destination)))            {
                 Directory.CreateDirectory(Path.GetFullPath(destination));
                 Console.WriteLine("Creating directory \'{0}\'", Path.GetDirectoryName(destination));
             }
@@ -576,15 +573,30 @@ namespace wudecon
 
             TAD tad = new TAD(tadFilepath);
             TAC tac = new TAC(tad, tacFilepath);
-
+            
             byte[] bytes = tac.GetFileBuffer(file);
-            FileStream fs = File.Open(destination, FileMode.OpenOrCreate);
-            foreach(byte b in bytes)
-                fs.WriteByte(b);
-            fs.Close();
-            tac.Close();
+            if (bytes != null) 
+            {
+                try
+                {
+                    FileStream fs = File.Open(destination, FileMode.OpenOrCreate, FileAccess.Write);
+                    foreach (byte b in bytes)
+                        fs.WriteByte(b);
+                    fs.Close();
+                    tac.Close();
 
-            Console.WriteLine("Finished writing {0} from {1} ({2})", Path.GetFileName(destination), Path.GetFileName(file), Path.GetFileName(tacFilepath));
+                    Console.WriteLine("Finished writing {0} from {1} ({2})", Path.GetFileName(destination), Path.GetFileName(file), Path.GetFileName(tacFilepath));
+                }
+                catch(Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFilepath, e.ToString());
+                }
+            }
+            else
+            {
+                Console.WriteLine("ERROR: Could not find {0} in TAC {1}", file, Path.GetFileName(tacFilepath));
+            }
+            return;
         }
 
 
@@ -597,6 +609,7 @@ namespace wudecon
             Console.WriteLine("\twudecon --mt7 <mt7 file> <obj file>");
             Console.WriteLine("\twudecon [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>");
             Console.WriteLine("\twudecon --tac <tad file> <tac file> <output dir>");
+            Console.WriteLine("\twudecon --tacfile <file in tac to extract> <output dir>");
 
             Console.WriteLine("\n\tBatch conversion possible by replacing file argument for path");
             Console.WriteLine("\tFor verbose logging, add 'v' to the beginning or end of the mode, e.g. '--allv' or 'v--mt5'");
@@ -669,6 +682,11 @@ namespace wudecon
             if ((args[0].Contains("--tac") || args[0].Contains("-tac")))
             {
                 ExtractTAC(args[1], args[2], args[3]);
+            }
+
+            if ((args[0].Contains("--tfile") || args[0].Contains("-tf")))
+            {
+                ExtractFileFromTAC(args[1], args[2], args[3]);
             }
 
             string src = args[1];
