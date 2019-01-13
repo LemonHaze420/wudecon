@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 using System.Reflection;
 using ShenmueDKSharp;
 using ShenmueDKSharp.Files;
+using ShenmueDKSharp.Files.Images;
 using ShenmueDKSharp.Files.Models;
 using ShenmueDKSharp.Files.Containers;
 using ShenmueDKSharp.Utils;
+using ShenmueDKSharp.Files.Misc;
 
 namespace wudecon
 {
@@ -778,6 +780,13 @@ namespace wudecon
 
         static void Main(string[] args)
         {
+            //ShenmueDKSharp settings
+            TextureDatabase.Automatic = true;
+            MT7.SearchTexturesOneDirUp = false;
+            MT5.SearchTexturesOneDirUp = false;
+            PVRT.EnableBuffering = true;
+            TEXN.WriteTextureBuffer = true;
+
             Console.WriteLine("{0} v{1}\n", Assembly.GetExecutingAssembly().GetName().Name, Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
             if (args.Count<string>() < 3 || 
