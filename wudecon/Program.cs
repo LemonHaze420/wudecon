@@ -36,8 +36,8 @@ namespace wudecon
 
                 if (Directory.Exists(path))
                 {
-                    var ext = new List<string> { ".mt7", ".MT7" };
-                    var myFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+                    var ext = new List<string> { ".mt7", ".mapm", ".prop", ".chrm" };
+                    var myFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s).ToLower()));
 
                     foreach (string file in myFiles)
                     {
@@ -116,8 +116,8 @@ namespace wudecon
 
                 if (Directory.Exists(path))
                 {
-                    var ext = new List<string> { ".mt5", ".MT5" };
-                    var myFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s)));
+                    var ext = new List<string> { ".mt5", ".mapm", ".prop", ".chrm" };
+                    var myFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s).ToLower()));
 
                     foreach (string file in myFiles)
                     {
@@ -635,9 +635,8 @@ namespace wudecon
         /// Extracts a given TAC file into the output directory provided
         /// </summary>
         /// <param name="tadFilepath">Path to TAC</param>
-        /// <param name="tacFilepath">Path to corresponding TAD file</param>
         /// <param name="folder">Path to output the extracted TAC</param>
-        static void ExtractTAC(string tadFilepath, string tacFilepath, string folder)
+        static void ExtractTAC(string tadFilepath, string folder)
         {
             try
             {
@@ -648,7 +647,7 @@ namespace wudecon
             }
             catch (Exception e)
             {
-                Console.WriteLine("Oops! {0} failed!\nException: {1}", tacFilepath, e.ToString());
+                Console.WriteLine("Oops! {0} failed!\nException: {1}", tadFilepath, e.ToString());
             }
         }
 
@@ -770,8 +769,9 @@ namespace wudecon
             Console.WriteLine("\twudecon --mt5 <dir with mt5's> <output dir>");
             Console.WriteLine("\twudecon --mt7 <mt7 file> <obj file>");
             Console.WriteLine("\twudecon [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>");
-            Console.WriteLine("\twudecon --tac <tad file> <tac file> <output dir>");
+            Console.WriteLine("\twudecon --tac <tad file> <output dir>");
             Console.WriteLine("\twudecon --tacfile <file in tac to extract> <output dir>");
+            Console.WriteLine("\twudecon --tacfull <tad file> <tac output dir> <model output dir> <mt5/mt7>");
 
             Console.WriteLine("\n\tBatch conversion possible by replacing file argument for path");
             Console.WriteLine("\tWhen using --tacfile (or -tfile) the path to search for within the TAC needs to be in lowercase.");
@@ -851,7 +851,7 @@ namespace wudecon
 
             if ((args[0].Contains("--tac") || args[0].Contains("-tac")))
             {
-                ExtractTAC(args[1], args[2], args[3]);
+                ExtractTAC(args[1], args[2]);
             }
 
             if ((args[0].Contains("--tfile") || args[0].Contains("-tf")))
@@ -890,7 +890,7 @@ namespace wudecon
                             {
                                 try
                                 {
-                                    ExtractTAC(tadFile, tacFile, destFolder);
+                                    ExtractTAC(tadFile, destFolder);
 
                                     if (bVerbose)
                                         Console.WriteLine("Finished extracting {0} from {1} to {2}", tadFile.ToString(), tacFile.ToString(), destFolder);
@@ -952,6 +952,67 @@ namespace wudecon
                 timeStart.Stop();
 
                 Console.WriteLine("Operations completed in {0} minutes ({1}ms)", timeStart.ElapsedMilliseconds/60000, timeStart.ElapsedMilliseconds);
+            }
+
+            if ((args[0].Contains("--tacfull") || args[0].Contains("-tacfull")))
+            {
+                if (args.Length != 5)
+                {
+                    PrintUsage();
+                    return;
+                }
+
+                string dstFolder = args[2];
+                string dstModelFolder = args[3];
+                string modelType = args[4];
+                if (!Directory.Exists(dstFolder))
+                {
+                    Directory.CreateDirectory(dstFolder);
+                }
+                if (!Directory.Exists(dstModelFolder))
+                {
+                    Directory.CreateDirectory(dstModelFolder);
+                }
+
+                ExtractTAC(args[1], dstFolder);
+
+                Console.WriteLine("Processing GZ..");
+                ExtractGZ(dstFolder, dstFolder);
+                Console.WriteLine("Finished processing GZ!");
+
+                Console.WriteLine("Processing AFS..");
+                ExtractAFS(dstFolder, dstFolder);
+                Console.WriteLine("Finished processing AFS!");
+
+                Console.WriteLine("Processing IPAC..");
+                ExtractIPAC(dstFolder, dstFolder);
+                Console.WriteLine("Finished processing IPAC!");
+
+                Console.WriteLine("Processing SPR..");
+                ExtractSPR(dstFolder, dstFolder);
+                Console.WriteLine("Finished processing SPR!");
+
+                Console.WriteLine("Processing PKF..");
+                ExtractPKF(dstFolder, dstFolder);
+                Console.WriteLine("Finished processing PKF!");
+
+                Console.WriteLine("Processing PKS..");
+                ExtractPKS(dstFolder, dstFolder);
+                Console.WriteLine("Finished processing PKS!");
+
+                if (modelType == "mt5")
+                {
+                    Console.WriteLine("Processing MT5..");
+                    ExportMT5(dstFolder, dstModelFolder);
+                    Console.WriteLine("Finished Processing MT5!");
+                }
+
+                if (modelType == "mt7")
+                {
+                    Console.WriteLine("Processing MT7..");
+                    ExportMT7(dstFolder, dstModelFolder);
+                    Console.WriteLine("Finished processing MT7!");
+                }
             }
 
             Console.WriteLine("Completed {0}/{1} operations.", iNumOperations, (iNumOperations + iNumFailedOperations));
