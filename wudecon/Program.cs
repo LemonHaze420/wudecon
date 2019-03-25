@@ -163,11 +163,19 @@ namespace wudecon
                 try
                 {
                     MT5 mt5 = new MT5(path);
+                    
+                    /*foreach(ModelNode node in mt5.GetAllNodes())
+                    {
+                        if (node.BoneID == BoneID.LeftUpperArm)
+                            node.Rotation.Y += 90.0f;
+                        else if(node.BoneID == BoneID.RightUpperArm)
+                            node.Rotation.Y -= 90.0f;
+                    }*/
+
                     OBJ obj = new OBJ(mt5);
-
-                    if(obj != null && mt5 != null)
+                    if (obj != null && mt5 != null)
                         obj.Write(objFilepath);
-
+                    
                     if(bVerbose)
                         Console.WriteLine("Converted {0} to {1}", path, objFilepath);
 
@@ -769,7 +777,7 @@ namespace wudecon
             Console.WriteLine("\twudecon --mt5 <dir with mt5's> <output dir>");
             Console.WriteLine("\twudecon --mt7 <mt7 file> <obj file>");
             Console.WriteLine("\twudecon [--pkf|--pks|--spr|--ipac|--gz|--afs] <source file> <output dir>");
-            Console.WriteLine("\twudecon --tac <tad file> <output dir>");
+            Console.WriteLine("\twudecon --tc <tad file> <output dir>");
             Console.WriteLine("\twudecon --tacfile <file in tac to extract> <output dir>");
             Console.WriteLine("\twudecon --tacfull <tad file> <tac output dir> <model output dir> <mt5/mt7>");
 
@@ -849,7 +857,7 @@ namespace wudecon
                 ExtractAFS(args[1], args[2]);
             }
 
-            if ((args[0].Contains("--tac") || args[0].Contains("-tac")))
+            if ((args[0].Contains("--tc") || args[0].Contains("-tc")))
             {
                 ExtractTAC(args[1], args[2]);
             }
