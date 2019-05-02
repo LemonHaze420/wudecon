@@ -23,6 +23,131 @@ namespace wudecon
         static int iNumFailedOperations = 0;
         static int iNumOperations       = 0;
 
+        static void ExportCHRT(string path, string outPath, string archiveDir)
+        {
+            if (archiveDir == null)            { 
+                Console.WriteLine("No archive directory supplied.");
+                return;
+            }
+
+            if (!File.Exists(path))
+            {
+                Console.WriteLine("{0} does not exist as a file, falling back to batch mode.", path);
+
+                if (Directory.Exists(path))
+                {
+                    var ext = new List<string> { ".CHRT" };
+                    var myFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s).ToLower()));
+
+                    foreach (string file in myFiles)
+                    {
+                        var currentChildDir = outPath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
+                        string filename = Path.GetFileName(file);
+                        string dest = currentChildDir + "\\_" + filename + "_\\" + Path.ChangeExtension(filename, ".obj");
+                        string dir = Path.GetDirectoryName(dest);
+                        if (!Directory.Exists(dir))
+                            Directory.CreateDirectory(dir);
+
+                        try
+                        {
+                            ExportCHRT(file, dest, archiveDir);
+
+                            if (bVerbose)
+                                Console.WriteLine("Converting {0} to {1}", file, dest);
+
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Oops! {0} failed!\nException: {1}", file, e.ToString());
+
+                            ++iNumFailedOperations;
+                        }
+
+                        ++iNumOperations;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("{0} does not exist. Cancelling operation.", path);
+                    return;
+                }
+            }
+            else
+            {
+                try
+                {
+                    CHRT chrt = new CHRT();
+                    chrt.Read(path);
+
+                    if (chrt != null)
+                    {
+                        foreach (ModelNode node in chrt.RootNode.GetAllNodes())
+                        {
+                            if (node.ModelName == "" || node.CHRTID == null)
+                                continue;
+
+                            if (node.Position == Vector3.Zero)
+                                continue;
+
+                            var tempOutputPath = outPath;
+                            var ext = new List<string> { ".mt5", ".MT5" };
+                            var myFiles = Directory.GetFiles(archiveDir, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s).ToLower()));
+
+                            foreach (string file in myFiles)
+                            {
+                                string filename = Path.GetFileName(file);
+                                try
+                                {
+                                    if (Path.GetFileNameWithoutExtension(file).ToUpper() == node.ModelName)
+                                    {
+                                        MT5 newNode = new MT5(file);
+                                        OBJ newModel = new OBJ(newNode);
+
+                                        tempOutputPath += "\\" + node.ModelName + ".chrt.obj";
+
+                                        if (newNode != null && newModel != null)                                        {
+                                            newModel.RootNode.Position = node.Position;
+                                            newModel.Write(tempOutputPath);
+                                        }
+                                        Console.WriteLine("Converted {0} into {1}", node.ModelName, tempOutputPath);
+                                        break;
+                                    }
+                                    else if (Path.GetFileNameWithoutExtension(file).ToLower() == node.ModelName.ToLower())
+                                    {
+                                        MT5 newNode = new MT5(file);
+                                        OBJ newModel = new OBJ(newNode);
+
+                                        tempOutputPath += "\\" + node.ModelName + ".chrt.obj";
+
+                                        if (newNode != null && newModel != null)
+                                        {
+                                            newModel.RootNode.Position = node.Position;
+                                            newModel.RootNode.Child.Position = node.Position;
+                                            newModel.Write(tempOutputPath);
+                                        }
+                                        Console.WriteLine("Converted {0} into {1}", node.ModelName, tempOutputPath);
+                                        break;
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("Oops! {0} failed!\nException: {1}", file, e.ToString());
+                                    ++iNumFailedOperations;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Oops! {0} failed!\nException: {1}", path, e.ToString());
+                    ++iNumFailedOperations;
+                }
+                ++iNumOperations;
+            }
+            return;
+        }
+
         /// <summary>
         /// Exports a given MT7 file into an OBJ file at the requested directory
         /// </summary>
@@ -815,6 +940,12 @@ namespace wudecon
             // Enable verbose logging
             if ((args[0].Contains("v")))
                 bVerbose = true;
+
+            // CHRT test
+            if((args[0].Contains("-chr")))
+            {
+                ExportCHRT(args[1], args[2], args[3]);
+            }
 
             // Model Conversions
             if ((args[0].Contains("--mt5") || args[0].Contains("-mt5")))
