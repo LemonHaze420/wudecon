@@ -98,31 +98,18 @@ namespace wudecon
                                 string filename = Path.GetFileName(file);
                                 try
                                 {
-                                    if (Path.GetFileNameWithoutExtension(file).ToUpper() == node.ModelName)
+                                    if (Path.GetFileNameWithoutExtension(file).ToUpper() == node.ModelName.ToUpper())
                                     {
+                                        tempOutputPath += "\\" + node.ModelName + ".chrt.obj";
+
                                         MT5 newNode = new MT5(file);
                                         OBJ newModel = new OBJ(newNode);
-
-                                        tempOutputPath += "\\" + node.ModelName + ".chrt.obj";
 
                                         if (newNode != null && newModel != null)                                        {
-                                            newModel.RootNode.Position = node.Position;
-                                            newModel.Write(tempOutputPath);
-                                        }
-                                        Console.WriteLine("Converted {0} into {1}", node.ModelName, tempOutputPath);
-                                        break;
-                                    }
-                                    else if (Path.GetFileNameWithoutExtension(file).ToLower() == node.ModelName.ToLower())
-                                    {
-                                        MT5 newNode = new MT5(file);
-                                        OBJ newModel = new OBJ(newNode);
+                                            newModel.RootNode.Position  = node.Position;
+                                            newModel.RootNode.Rotation  = node.Rotation;
+                                            newModel.RootNode.Scale     = node.Scale;
 
-                                        tempOutputPath += "\\" + node.ModelName + ".chrt.obj";
-
-                                        if (newNode != null && newModel != null)
-                                        {
-                                            newModel.RootNode.Position = node.Position;
-                                            newModel.RootNode.Child.Position = node.Position;
                                             newModel.Write(tempOutputPath);
                                         }
                                         Console.WriteLine("Converted {0} into {1}", node.ModelName, tempOutputPath);
