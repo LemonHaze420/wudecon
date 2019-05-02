@@ -36,14 +36,14 @@ namespace wudecon
 
                 if (Directory.Exists(path))
                 {
-                    var ext = new List<string> { ".CHRT" };
+                    var ext = new List<string> { ".chrt" };
                     var myFiles = Directory.GetFiles(path, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s).ToLower()));
 
                     foreach (string file in myFiles)
                     {
                         var currentChildDir = outPath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\" + Path.ChangeExtension(filename, ".obj");
+                        string dest = currentChildDir + "\\_" + filename + "_\\" + Path.ChangeExtension(filename, ".chrt.obj");
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
