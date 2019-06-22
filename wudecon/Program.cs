@@ -13,9 +13,19 @@ using ShenmueDKSharp.Files.Models;
 using ShenmueDKSharp.Files.Containers;
 using ShenmueDKSharp.Utils;
 using ShenmueDKSharp.Files.Misc;
+using SimpleJSON;
+using ShenmueDKSharp.Files.Images._DDS;
+using static ShenmueDKSharp.Files.Images._DDS.DDSFormats;
 
 namespace wudecon
 {
+    class TexEntry
+    {
+        public string Source;
+        public string Destination;
+        public string TextureID;
+    }
+
     class Program
     {
         static bool bTADExtract         = false;
@@ -23,12 +33,53 @@ namespace wudecon
         static int iNumFailedOperations = 0;
         static int iNumOperations       = 0;
 
+        static List<TexEntry> textureEntries = new List<TexEntry>();
+        static string dumpOutputDir;
+        static string textureOutputDir = "H:\\mod_sm2\\textureoverride\\";
+
+        static void AddTextureEntries(BaseModel model)
+        {
+            if (!Directory.Exists(textureOutputDir))
+            {
+                Directory.CreateDirectory(textureOutputDir);
+            }
+
+            for (int i = 0; i < model.Textures.Count; i++)
+            {
+                Texture tex = (Texture)model.Textures[i];
+                //DDS dds = new DDS(tex.Image);
+
+                string filename = Path.GetFileNameWithoutExtension(model.FileName) + "_" + i.ToString() + ".dds";
+                string modelFolder = Path.GetDirectoryName(model.FilePath);
+                string destination = modelFolder.Replace(dumpOutputDir, "") + "\\" + model.FileName + "_\\";
+                string folder = textureOutputDir + destination;
+                string filepath = folder + filename;
+                string destinationFile = destination.Replace("\\", "/") + filename;
+
+                TexEntry entry = new TexEntry();
+                entry.Source = "/" + destinationFile;
+                entry.Destination = "/textureoverride/" + destinationFile;
+
+                entry.Source = entry.Source.ToLower();
+                entry.Destination = entry.Destination.ToLower();
+
+                entry.TextureID = tex.TextureID.HexStr;
+                textureEntries.Add(entry);
+
+                //dds.AlphaSettings = DDSGeneral.AlphaSettings.KeepAlpha;
+                //dds.FormatDetails = new DDSFormatDetails(DDSFormat.DDS_DXT3);
+                //dds.Write(filepath);
+            }
+        }
+
         static void ExportCHRT(string path, string outPath, string archiveDir)
         {
             if (archiveDir == null)            { 
                 Console.WriteLine("No archive directory supplied.");
                 return;
             }
+
+            TextureDatabase.SearchDirectory(archiveDir);
 
             if (!File.Exists(path))
             {
@@ -43,7 +94,7 @@ namespace wudecon
                     {
                         var currentChildDir = outPath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\" + Path.ChangeExtension(filename, ".chrt.obj");
+                        string dest = currentChildDir + "\\" + Path.GetFileNameWithoutExtension(filename) + "_\\" + Path.ChangeExtension(filename, ".chrt.obj");
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
@@ -90,7 +141,7 @@ namespace wudecon
                                 continue;
 
                             var tempOutputPath = outPath;
-                            var ext = new List<string> { ".mt5", ".MT5" };
+                            var ext = new List<string> { ".mt5", ".MT5", ".chrm", ".CHRM" };
                             var myFiles = Directory.GetFiles(archiveDir, "*.*", SearchOption.AllDirectories).Where(s => ext.Contains(Path.GetExtension(s).ToLower()));
 
                             foreach (string file in myFiles)
@@ -155,7 +206,7 @@ namespace wudecon
                     {
                         var currentChildDir = objFilepath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\" + Path.ChangeExtension(filename, ".obj");
+                        string dest = currentChildDir + "\\" + Path.GetFileNameWithoutExtension(filename) + "_\\" + Path.ChangeExtension(filename, ".obj");
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
@@ -194,13 +245,14 @@ namespace wudecon
                 try
                 {
                     MT7 mt7 = new MT7(path);
-                    OBJ obj = new OBJ(mt7);
+                    AddTextureEntries(mt7);
+                    /*OBJ obj = new OBJ(mt7);
 
                     if(obj != null && mt7 != null)
                         obj.Write(objFilepath);                    
 
                     if(bVerbose)
-                        Console.WriteLine("Converting {0} to {1}", path, objFilepath);
+                        Console.WriteLine("Converting {0} to {1}", path, objFilepath);*/
                 }
                 catch (Exception e)
                 {
@@ -235,7 +287,7 @@ namespace wudecon
                     {
                         var currentChildDir = objFilepath + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\" + Path.ChangeExtension(filename, ".obj");
+                        string dest = currentChildDir + "\\" + Path.GetFileNameWithoutExtension(filename) + "_\\" + Path.ChangeExtension(filename, ".obj");
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
@@ -275,7 +327,7 @@ namespace wudecon
                 try
                 {
                     MT5 mt5 = new MT5(path);
-                    
+                    AddTextureEntries(mt5);
                     /*foreach(ModelNode node in mt5.GetAllNodes())
                     {
                         if (node.BoneID == BoneID.LeftUpperArm)
@@ -284,12 +336,12 @@ namespace wudecon
                             node.Rotation.Y -= 90.0f;
                     }*/
 
-                    OBJ obj = new OBJ(mt5);
+                    /*OBJ obj = new OBJ(mt5);
                     if (obj != null && mt5 != null)
                         obj.Write(objFilepath);
                     
                     if(bVerbose)
-                        Console.WriteLine("Converted {0} to {1}", path, objFilepath);
+                        Console.WriteLine("Converted {0} to {1}", path, objFilepath);*/
 
                 }
                 catch (Exception e)
@@ -324,7 +376,7 @@ namespace wudecon
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dest = currentChildDir + "\\" + Path.GetFileNameWithoutExtension(filename) + "\\";
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
@@ -400,7 +452,7 @@ namespace wudecon
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dest = currentChildDir + "\\" + Path.GetFileNameWithoutExtension(filename) + "\\";
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
@@ -474,7 +526,7 @@ namespace wudecon
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dest = currentChildDir + "\\" + Path.GetFileNameWithoutExtension(filename) + "\\";
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
@@ -549,7 +601,7 @@ namespace wudecon
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dest = currentChildDir + "\\" + Path.GetFileNameWithoutExtension(filename) + "\\";
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
@@ -622,7 +674,7 @@ namespace wudecon
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dest = currentChildDir + "\\" + Path.GetFileNameWithoutExtension(filename) + "_\\";
                         string dir = Path.GetDirectoryName(dest);
                         if (!Directory.Exists(dir))
                             Directory.CreateDirectory(dir);
@@ -697,17 +749,21 @@ namespace wudecon
                     {
                         var currentChildDir = folder + "\\" + Path.GetDirectoryName(file.Replace(path, ""));
                         string filename = Path.GetFileName(file);
-                        string dest = currentChildDir + "\\_" + filename + "_\\";
+                        string dest = currentChildDir + "\\" + filename + "\\";
                         string dir = Path.GetDirectoryName(dest);
-                        if (!Directory.Exists(dir))
-                            Directory.CreateDirectory(dir);
+                        
 
                         try
                         {
                             AFS afs = new AFS(file);
 
+                            // delete file cause it can't exist
+                            File.Delete(file);
+                            if (!Directory.Exists(dir))
+                                Directory.CreateDirectory(dir);
+
                             if (afs != null)
-                                afs.Unpack(dest);
+                                afs.Unpack(dest, true);
 
                             if (bVerbose)
                                 Console.WriteLine("Converted {0} to {1}", file, dest);
@@ -734,7 +790,7 @@ namespace wudecon
                     AFS afs = new AFS(path);
                     
                     if(afs != null)
-                        afs.Unpack(folder);
+                        afs.Unpack(folder, true);
 
                     if (bVerbose)
                         Console.WriteLine("Converted {0} to {1}", path, folder);
@@ -1100,6 +1156,8 @@ namespace wudecon
                     Directory.CreateDirectory(dstModelFolder);
                 }
 
+                dumpOutputDir = dstFolder;
+
                 ExtractTAC(args[1], dstFolder);
 
                 Console.WriteLine("Processing GZ..");
@@ -1138,6 +1196,45 @@ namespace wudecon
                     Console.WriteLine("Processing MT7..");
                     ExportMT7(dstFolder, dstModelFolder);
                     Console.WriteLine("Finished processing MT7!");
+                }
+
+                JSONNode textureOverride = new JSONObject();
+                textureOverride["Mappings"] = new JSONArray();
+                
+                foreach (var entry in textureEntries)
+                {
+                    JSONNode n = new JSONObject();
+                    n["Source"] = entry.Source;
+                    n["Destination"] = entry.Destination;
+                    textureOverride["Mappings"].Add(n);
+                }
+
+                using (FileStream stream = File.Open("H:\\sm2\\SDTextureOverride.json", FileMode.Create))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(textureOverride.ToString(1));
+                    }
+                }
+
+                JSONNode textureOverride2 = new JSONObject();
+                textureOverride2["Mappings"] = new JSONArray();
+
+                foreach (var entry in textureEntries)
+                {
+                    JSONNode n = new JSONObject();
+                    n["Source"] = entry.Source;
+                    n["Destination"] = entry.Destination;
+                    n["TextureID"] = entry.TextureID;
+                    textureOverride2["Mappings"].Add(n);
+                }
+
+                using (FileStream stream = File.Open("H:\\sm2\\SDTextureOverride2.json", FileMode.Create))
+                {
+                    using (BinaryWriter writer = new BinaryWriter(stream))
+                    {
+                        writer.Write(textureOverride2.ToString(1));
+                    }
                 }
             }
 
